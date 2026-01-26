@@ -1,0 +1,39 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+venv/
+ENV/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Data files (large dataset)
+data/job_post_data.json
+
+# Vector indexes (generated, can be recreated)
+indexes/
+
+# Personal notes and Claude-specific files
+CLAUDE.md
+meta/
+.claude/
+
+# Logs
+*.log
