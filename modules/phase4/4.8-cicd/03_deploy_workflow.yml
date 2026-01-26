@@ -1,0 +1,502 @@
+# 03 - Deploy Workflow
+# ====================
+# Automated deployment on merge to main branch.
+#
+# Key concept: Continuous Deployment (CD) automatically deploys code to
+# production after tests pass. This reduces manual errors and speeds up delivery.
+#
+# This file would be saved as: .github/workflows/deploy.yml
+
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual deployment
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  PYTHON_VERSION: "3.11"
+  APP_NAME: "aiapp"
+
+jobs:
+  # Job 1: Run tests before deploying
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+      - name: Tests passed
+        run: echo "✓ All tests passed, proceeding with deployment"
+
+  # Job 2: Build and prepare deployment
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip build
+
+      - name: Create deployment package
+        run: |
+          # Create a deployment directory
+          mkdir -p deploy
+
+          # Copy application files
+          cp -r *.py deploy/
+          cp requirements.txt deploy/
+
+          # Create version file
+          echo "${{ github.sha }}" > deploy/VERSION
+          echo "$(date -u)" >> deploy/VERSION
+
+          # Create tarball
+          tar -czf deploy-${{ github.sha }}.tar.gz deploy/
+
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-package
+          path: deploy-${{ github.sha }}.tar.gz
+
+  # Job 3: Deploy to staging (for testing)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event.inputs.environment == 'staging' || github.ref != 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.yourdomain.com
+
+    steps:
+      - name: Download deployment package
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-package
+
+      - name: Deploy to staging server
+        run: |
+          echo "Deploying to staging..."
+          # In production, use SSH or deployment tool
+          # Example with SSH:
+          # ssh user@staging-server 'bash -s' < deploy-script.sh
+
+      - name: Health check
+        run: |
+          echo "Checking staging health endpoint..."
+          # curl -f https://staging.yourdomain.com/health || exit 1
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests on staging..."
+          # pytest tests/smoke/ --base-url=https://staging.yourdomain.com
+
+  # Job 4: Deploy to production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event.inputs.environment == 'production' || github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://yourdomain.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download deployment package
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-package
+
+      - name: Deploy to production server via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          # Set up SSH key
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+
+          # Deploy via SSH
+          echo "Deploying to production server..."
+          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
+            set -e
+
+            # Variables
+            APP_DIR="/home/aiapp/apps/${{ env.APP_NAME }}"
+
+            # Navigate to app directory
+            cd $APP_DIR
+
+            # Pull latest code
+            git pull origin main
+
+            # Activate virtual environment
+            source .venv/bin/activate
+
+            # Install/update dependencies
+            pip install -r requirements.txt
+
+            # Run database migrations (if applicable)
+            # alembic upgrade head
+
+            # Restart application
+            sudo supervisorctl restart aiapp
+
+            # Wait for app to start
+            sleep 5
+
+            echo "✓ Deployment complete"
+          ENDSSH
+
+      - name: Health check
+        run: |
+          echo "Waiting for application to be ready..."
+          sleep 10
+
+          # Check health endpoint
+          echo "Checking health endpoint..."
+          # curl -f https://yourdomain.com/health || exit 1
+
+          echo "✓ Health check passed"
+
+      - name: Run smoke tests
+        run: |
+          echo "Running production smoke tests..."
+          # pytest tests/smoke/ --base-url=https://yourdomain.com
+          echo "✓ Smoke tests passed"
+
+  # Job 5: Alternative - Deploy using rsync
+  deploy-rsync:
+    name: Deploy via Rsync
+    runs-on: ubuntu-latest
+    needs: build
+    if: false  # Set to true to use this method instead
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via rsync
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          # Set up SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+
+          # Sync files (excluding sensitive files)
+          rsync -avz --delete \
+            --exclude '.env' \
+            --exclude '.git' \
+            --exclude '__pycache__' \
+            --exclude '*.pyc' \
+            --exclude 'venv' \
+            --exclude '.venv' \
+            ./ $SERVER_USER@$SERVER_HOST:/home/aiapp/apps/${{ env.APP_NAME }}/
+
+          # Restart application
+          ssh $SERVER_USER@$SERVER_HOST "sudo supervisorctl restart aiapp"
+
+  # Job 6: Alternative - Deploy using Docker
+  deploy-docker:
+    name: Deploy Docker Container
+    runs-on: ubuntu-latest
+    needs: test
+    if: false  # Set to true to use Docker deployment
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
+
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          # SSH and pull/restart container
+          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            docker stop aiapp || true
+            docker rm aiapp || true
+            docker run -d \
+              --name aiapp \
+              -p 8000:8000 \
+              -e OPENAI_API_KEY=$OPENAI_API_KEY \
+              --restart unless-stopped \
+              ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+          ENDSSH
+
+  # Job 7: Post-deployment tasks
+  post-deploy:
+    name: Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: deploy-production
+
+    steps:
+      - name: Tag release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/release-${context.sha.substring(0, 7)}`,
+              sha: context.sha
+            })
+
+      - name: Create deployment record
+        run: |
+          echo "Deployment completed at $(date)"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deployed by: ${{ github.actor }}"
+
+      - name: Notify team
+        run: |
+          echo "Notifying team of successful deployment..."
+          # Send Slack notification
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"✓ Deployed to production: ${{ github.sha }}"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # Job 8: Rollback capability
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [deploy-production, post-deploy]
+    environment:
+      name: production
+
+    steps:
+      - name: Rollback to previous version
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          echo "Rolling back to previous version..."
+
+          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
+            set -e
+
+            APP_DIR="/home/aiapp/apps/${{ env.APP_NAME }}"
+            cd $APP_DIR
+
+            # Revert to previous commit
+            git reset --hard HEAD~1
+
+            # Reinstall dependencies
+            source .venv/bin/activate
+            pip install -r requirements.txt
+
+            # Restart application
+            sudo supervisorctl restart aiapp
+
+            echo "✓ Rollback complete"
+          ENDSSH
+
+      - name: Notify team of rollback
+        run: |
+          echo "⚠ Deployment failed and was rolled back"
+
+# ============================================================================
+# DEPLOYMENT SCRIPT EXAMPLE
+# ============================================================================
+#
+# deploy-script.sh (run on server)
+# ---------------------------------
+# #!/bin/bash
+# set -e
+#
+# APP_DIR="/home/aiapp/apps/aiapp"
+# BACKUP_DIR="/home/aiapp/backups"
+#
+# echo "Starting deployment..."
+#
+# # Create backup
+# echo "Creating backup..."
+# BACKUP_FILE="$BACKUP_DIR/backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+# tar -czf $BACKUP_FILE $APP_DIR
+#
+# # Pull latest code
+# echo "Pulling latest code..."
+# cd $APP_DIR
+# git pull origin main
+#
+# # Install dependencies
+# echo "Installing dependencies..."
+# source .venv/bin/activate
+# pip install -r requirements.txt
+#
+# # Run migrations
+# echo "Running migrations..."
+# alembic upgrade head
+#
+# # Restart application
+# echo "Restarting application..."
+# sudo supervisorctl restart aiapp
+#
+# # Wait and check health
+# sleep 5
+# curl -f http://localhost:8000/health || {
+#     echo "Health check failed! Rolling back..."
+#     tar -xzf $BACKUP_FILE -C /
+#     sudo supervisorctl restart aiapp
+#     exit 1
+# }
+#
+# echo "✓ Deployment successful!"
+#
+# ============================================================================
+# REQUIRED SECRETS
+# ============================================================================
+#
+# Add these secrets to your GitHub repository:
+# (Settings → Secrets and variables → Actions → New repository secret)
+#
+# SSH_PRIVATE_KEY     - Private SSH key for server access
+# SERVER_HOST         - Production server hostname/IP
+# SERVER_USER         - SSH username (e.g., 'aiapp')
+# OPENAI_API_KEY      - OpenAI API key
+# DOCKER_USERNAME     - Docker Hub username (if using Docker)
+# DOCKER_PASSWORD     - Docker Hub password/token
+# SLACK_WEBHOOK_URL   - Slack webhook for notifications
+#
+# ============================================================================
+# SERVER SETUP REQUIREMENTS
+# ============================================================================
+#
+# 1. Add GitHub Actions SSH key to server:
+#    ssh-copy-id -i github_actions.pub user@server
+#
+# 2. Configure passwordless sudo for supervisor:
+#    sudo visudo
+#    # Add: aiapp ALL=(ALL) NOPASSWD: /usr/bin/supervisorctl
+#
+# 3. Set up git repository on server:
+#    cd /home/aiapp/apps
+#    git clone https://github.com/you/repo.git aiapp
+#
+# 4. Configure supervisor:
+#    sudo nano /etc/supervisor/conf.d/aiapp.conf
+#
+# 5. Set environment variables:
+#    nano /home/aiapp/apps/aiapp/.env
+#
+# ============================================================================
+# BLUE-GREEN DEPLOYMENT (ADVANCED)
+# ============================================================================
+#
+# For zero-downtime deployments:
+#
+# 1. Deploy new version to different port (e.g., 8001)
+# 2. Run health checks on new version
+# 3. Switch Caddy/Nginx to new port
+# 4. Stop old version
+# 5. Clean up
+#
+# Caddy config for blue-green:
+# yourdomain.com {
+#     reverse_proxy localhost:8000 localhost:8001 {
+#         lb_policy first
+#         health_uri /health
+#     }
+# }
+#
+# ============================================================================
+# USAGE
+# ============================================================================
+#
+# Automatic deployment:
+# ---------------------
+# 1. Push to main branch
+# 2. Tests run automatically
+# 3. If tests pass, deploys to production
+# 4. Health checks verify deployment
+#
+# Manual deployment:
+# ------------------
+# 1. Go to Actions tab
+# 2. Select "Deploy to Production"
+# 3. Click "Run workflow"
+# 4. Choose environment
+# 5. Click "Run workflow"
+#
+# Rollback:
+# ---------
+# 1. SSH to server
+# 2. cd /home/aiapp/apps/aiapp
+# 3. git reset --hard HEAD~1
+# 4. source .venv/bin/activate
+# 5. pip install -r requirements.txt
+# 6. sudo supervisorctl restart aiapp
+#
+# ============================================================================

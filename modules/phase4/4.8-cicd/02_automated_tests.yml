@@ -1,0 +1,440 @@
+# 02 - Automated Testing Workflow
+# ================================
+# Run tests automatically on every push and pull request.
+#
+# Key concept: Automated testing in CI ensures code quality and catches bugs
+# before they reach production. Tests run on every change.
+#
+# Book reference: AI_eng.4
+#
+# This file would be saved as: .github/workflows/test.yml
+
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # Job 1: Linting and code quality
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install linters
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black isort mypy
+
+      - name: Run Black (code formatter check)
+        run: |
+          black --check .
+        continue-on-error: true
+
+      - name: Run isort (import sorter check)
+        run: |
+          isort --check-only .
+        continue-on-error: true
+
+      - name: Run Ruff (fast linter)
+        run: |
+          ruff check .
+        continue-on-error: true
+
+      - name: Run mypy (type checker)
+        run: |
+          mypy . --ignore-missing-imports
+        continue-on-error: true
+
+  # Job 2: Unit tests
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ -v --cov=. --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-unit
+        continue-on-error: true
+
+  # Job 3: Integration tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+
+    # Service containers (for database, etc.)
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio
+
+      - name: Wait for services
+        run: |
+          sleep 10  # Give services time to fully start
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+          REDIS_URL: redis://localhost:6379
+        run: |
+          pytest tests/integration/ -v
+
+  # Job 4: Test against multiple Python versions
+  test-matrix:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+  # Job 5: AI-specific tests (mocked LLM calls)
+  ai-tests:
+    name: AI Component Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-mock
+
+      - name: Run AI tests (mocked)
+        run: |
+          # These tests should use mocked LLM responses
+          # No real API calls should be made in CI
+          pytest tests/ai/ -v -m "not integration"
+
+      - name: Test with real API (optional)
+        if: github.ref == 'refs/heads/main'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Only run real API tests on main branch
+          pytest tests/ai/ -v -m "integration" --maxfail=3
+        continue-on-error: true
+
+  # Job 6: Security scanning
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install safety bandit
+
+      - name: Check for vulnerabilities with Safety
+        run: |
+          pip freeze | safety check --stdin
+        continue-on-error: true
+
+      - name: Run Bandit security linter
+        run: |
+          bandit -r . -f json -o bandit-report.json
+        continue-on-error: true
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-report
+          path: bandit-report.json
+
+  # Job 7: Test coverage report
+  coverage-report:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ --cov=. --cov-report=html --cov-report=term
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: htmlcov/
+
+      - name: Coverage comment (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Coverage report generated. Download artifact to view."
+
+  # Job 8: Performance tests
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-benchmark
+
+      - name: Run performance tests
+        run: |
+          pytest tests/performance/ -v --benchmark-only
+
+  # Job 9: Notify on failure
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [lint, unit-tests, integration-tests]
+    if: failure()
+
+    steps:
+      - name: Send notification
+        run: |
+          echo "Tests failed! Check the logs at:"
+          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          # In production, send to Slack/Discord/Email
+
+# ============================================================================
+# EXAMPLE TEST FILES
+# ============================================================================
+#
+# tests/unit/test_embeddings.py
+# ------------------------------
+# import pytest
+# from unittest.mock import Mock, patch
+#
+# def test_generate_embeddings():
+#     """Test embedding generation (mocked)."""
+#     with patch('openai.Embedding.create') as mock_create:
+#         mock_create.return_value = Mock(
+#             data=[Mock(embedding=[0.1, 0.2, 0.3])]
+#         )
+#
+#         result = generate_embeddings("test text")
+#         assert len(result) == 3
+#         assert result == [0.1, 0.2, 0.3]
+#
+# tests/integration/test_rag_pipeline.py
+# ---------------------------------------
+# import pytest
+#
+# @pytest.mark.integration
+# async def test_rag_pipeline_end_to_end():
+#     """Test full RAG pipeline with database."""
+#     # Insert test documents
+#     await db.insert_documents([...])
+#
+#     # Query
+#     result = await rag_pipeline.query("test query")
+#
+#     # Verify
+#     assert result is not None
+#     assert len(result.sources) > 0
+#
+# tests/ai/test_llm_calls.py
+# ---------------------------
+# import pytest
+#
+# @pytest.mark.mock
+# def test_llm_call_mocked():
+#     """Test LLM call with mocked response."""
+#     with patch('openai.ChatCompletion.create') as mock:
+#         mock.return_value = {...}
+#         result = call_llm("test")
+#         assert result is not None
+#
+# @pytest.mark.integration
+# def test_llm_call_real():
+#     """Test real LLM call (skipped in CI by default)."""
+#     result = call_llm("test")
+#     assert result is not None
+#
+# ============================================================================
+# PYTEST CONFIGURATION
+# ============================================================================
+#
+# pyproject.toml or pytest.ini:
+# ------------------------------
+# [tool.pytest.ini_options]
+# testpaths = ["tests"]
+# python_files = ["test_*.py"]
+# python_functions = ["test_*"]
+# markers = [
+#     "integration: marks tests as integration tests",
+#     "slow: marks tests as slow",
+#     "mock: marks tests that use mocked responses",
+# ]
+#
+# # Skip integration tests by default
+# addopts = "-v -m 'not integration'"
+#
+# ============================================================================
+# USAGE
+# ============================================================================
+#
+# This workflow runs automatically on:
+# - Every push to main or develop
+# - Every pull request to main
+# - Manual trigger
+#
+# To run locally:
+# ---------------
+# # Install test dependencies
+# pip install pytest pytest-cov pytest-asyncio pytest-mock
+#
+# # Run all tests
+# pytest
+#
+# # Run with coverage
+# pytest --cov=. --cov-report=html
+#
+# # Run only unit tests
+# pytest tests/unit/
+#
+# # Run specific test
+# pytest tests/unit/test_embeddings.py::test_generate_embeddings
+#
+# To skip integration tests:
+# --------------------------
+# pytest -m "not integration"
+#
+# To run only integration tests:
+# -------------------------------
+# pytest -m integration
+#
+# ============================================================================

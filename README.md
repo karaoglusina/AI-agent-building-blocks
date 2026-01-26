@@ -63,42 +63,47 @@ The patterns you'll use daily when building AI systems:
 - **Prompt Engineering**: Chain-of-thought, few-shot examples, defensive prompting, self-consistency
 - **Evaluation**: Classification/retrieval/generation metrics, LLM-as-judge, A/B testing
 
-### Phase 3: Advanced Patterns (🚧 In Progress)
+### Phase 3: Advanced Patterns (✅ 50 scripts)
 
 Sophisticated agent behaviors and production concerns:
 
-- **Advanced Agents**: ReAct, reflection, planning, self-correction, tree-of-thought
-- **Multi-Agent Systems**: Agent handoff, specialized agents, coordinator patterns
-- **Advanced Memory**: Structured memory, importance scoring, memory consolidation
-- **Advanced RAG**: Query rewriting, multi-hop retrieval, self-RAG, hybrid search (BM25 + semantic)
-- **Iterative Processing**: Map-reduce, progressive summarization, batch processing
-- **FastAPI**: Building APIs for your agents (endpoints, streaming, validation)
-- **Clustering & Topics**: K-means, UMAP visualization, BERTopic, LLM-generated labels
-- **Evaluation Systems**: Test datasets, evaluation pipelines, regression testing, cost tracking
-- **Document Processing**: PDF parsing, structured extraction from documents
+- **Advanced Agents** (7 scripts): ReAct, reflection, planning, self-correction, confidence routing, iterative refinement, tree-of-thought
+- **Multi-Agent Systems** (5 scripts): Agent handoff, specialized agents, coordinator patterns, preference detection, agent communication
+- **Advanced Memory** (5 scripts): Structured memory, importance scoring, memory consolidation, preference systems, episodic memory
+- **Advanced RAG** (6 scripts): Query rewriting, multi-hop retrieval, self-RAG, cross-encoder reranking, hybrid search, RAG fusion
+- **Iterative Processing** (5 scripts): Map-reduce, progressive summarization, refinement chains, hierarchical processing, batch processing
+- **FastAPI** (6 scripts): Building APIs for your agents (endpoints, async, streaming, chat, RAG APIs)
+- **Clustering & Topics** (6 scripts): K-means, UMAP visualization, BERTopic, LLM-based cluster labeling, topic coherence, interactive exploration
+- **Evaluation Systems** (6 scripts): Test datasets, evaluation pipelines, regression testing, prompt versioning, cost tracking, human eval design
+- **Document Processing** (4 scripts): PDF parsing with PyMuPDF/pypdf, structured extraction, full pipeline to chunks
 
-### Phase 4: Production & Operations (📋 Planned)
+### Phase 4: Production & Operations (📋 35 scripts planned, 1 module complete)
 
 Taking agents to production:
 
-- Docker containerization
-- PostgreSQL + pgvector for production vector storage
-- Observability with Langfuse
-- Guardrails (input validation, prompt injection defense, PII filtering)
-- Async patterns and background jobs (Celery)
-- MCP servers for tool integration
-- Cloud deployment
-- CI/CD basics
+- **Docker & Containerization** (✅ 5 files): Dockerfiles, docker-compose, environment configuration, multi-service orchestration
+- **PostgreSQL + pgvector** (6 scripts): SQLAlchemy ORM, CRUD operations, Alembic migrations, pgvector setup, vector search, hybrid search
+- **Observability** (5 scripts): Langfuse setup, tracing LLM calls, RAG pipeline tracing, cost monitoring, custom metrics
+- **Guardrails** (8 scripts): Input validation, prompt injection defense, jailbreak defense, PII filtering, output validation, content moderation, architecture, model gateway
+- **Async & Background Jobs** (5 scripts): Asyncio basics, concurrent LLM calls, Celery setup, background tasks, task status tracking
+- **MCP Servers** (4 scripts): MCP overview, client connection, tool usage, custom server creation
+- **Cloud Deployment** (4 files): VM setup guide, HTTPS configuration, health checks, logging configuration
+- **CI/CD Basics** (3 files): GitHub Actions workflows for testing, automation, deployment
 
-### Phase 5: Specialization (📋 Planned)
+### Phase 5: Specialization (📋 20 scripts planned)
 
 Advanced topics for specific use cases:
 
-- Fine-tuning LLMs (when and how)
-- Custom embeddings and domain adaptation
-- Advanced NLP (dependency parsing, relation extraction, coreference)
-- 
+- **Fine-tuning LLMs** (6 scripts): Decision framework, data preparation, LoRA/QLoRA, quantization, SFT/RLHF/DPO overview, evaluation
+- **Custom Embeddings** (4 scripts): sentence-transformers, domain adaptation with TSDAE, embedding evaluation, bias awareness
+- **Advanced NLP** (3 scripts): Dependency parsing, relation extraction, coreference resolution
+- **Multimodal** (4 scripts): GPT-4V vision basics, CLIP text-image similarity, multimodal search, document vision
 
+## Getting Started
+
+### Prerequisites
+
+- Python 3.11+
 - OpenAI API key
 
 ### Setup

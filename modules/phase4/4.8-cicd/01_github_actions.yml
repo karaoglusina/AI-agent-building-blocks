@@ -1,0 +1,346 @@
+# 01 - GitHub Actions Basics
+# ==========================
+# Simple CI workflow to understand GitHub Actions fundamentals.
+#
+# Key concept: GitHub Actions automates workflows triggered by events
+# (push, pull request, schedule, etc.). This example shows basic structure.
+#
+# This file would be saved as: .github/workflows/01_basic.yml
+
+name: Basic CI
+
+# When to run this workflow
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual trigger
+
+# Environment variables available to all jobs
+env:
+  PYTHON_VERSION: "3.11"
+
+# Jobs to run (can run in parallel or sequence)
+jobs:
+  # Job 1: Hello World
+  hello:
+    name: Hello World
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print greeting
+        run: |
+          echo "Hello from GitHub Actions!"
+          echo "Event: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+
+      - name: Show environment
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Workspace: ${{ github.workspace }}"
+          env
+
+  # Job 2: Check Python
+  check-python:
+    name: Check Python Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Display Python version
+        run: |
+          python --version
+          pip --version
+
+  # Job 3: Checkout and inspect code
+  inspect-code:
+    name: Inspect Repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: List files
+        run: |
+          echo "Repository contents:"
+          ls -la
+          echo ""
+          echo "Python files:"
+          find . -name "*.py" -type f | head -10
+
+      - name: Count lines of code
+        run: |
+          echo "Total Python files:"
+          find . -name "*.py" -type f | wc -l
+          echo "Total lines of Python code:"
+          find . -name "*.py" -type f -exec cat {} \; | wc -l
+
+  # Job 4: Install dependencies (demonstrates caching)
+  install-deps:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip list
+
+      - name: Show installed packages
+        run: pip freeze
+
+  # Job 5: Matrix strategy (test multiple versions)
+  test-matrix:
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+      fail-fast: false  # Continue even if one fails
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python info
+        run: |
+          python --version
+          echo "OS: ${{ matrix.os }}"
+          echo "Python: ${{ matrix.python-version }}"
+
+  # Job 6: Conditional execution
+  conditional-job:
+    name: Conditional Job
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Only runs on push to main
+        run: |
+          echo "This only runs when pushing to main branch"
+          echo "Event: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+
+  # Job 7: Sequential jobs (this runs after hello job)
+  after-hello:
+    name: After Hello
+    runs-on: ubuntu-latest
+    needs: hello  # Wait for hello job to complete
+
+    steps:
+      - name: This runs after hello
+        run: echo "The hello job completed successfully!"
+
+  # Job 8: Artifacts (save and share files between jobs)
+  create-artifact:
+    name: Create Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create file
+        run: |
+          mkdir -p output
+          echo "Build timestamp: $(date)" > output/build-info.txt
+          echo "Commit: ${{ github.sha }}" >> output/build-info.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: output/build-info.txt
+          retention-days: 7
+
+  # Job 9: Download and use artifact
+  use-artifact:
+    name: Use Artifact
+    runs-on: ubuntu-latest
+    needs: create-artifact  # Wait for artifact to be created
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-info
+
+      - name: Display artifact contents
+        run: cat build-info.txt
+
+  # Job 10: Secrets and environment variables
+  use-secrets:
+    name: Use Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use secret
+        run: |
+          # Secrets are accessed via ${{ secrets.NAME }}
+          # They are masked in logs automatically
+          echo "API key is set: ${{ secrets.OPENAI_API_KEY != '' }}"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Environment-specific config
+        run: |
+          echo "Environment: ${{ github.event_name }}"
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "Running in PRODUCTION mode"
+          else
+            echo "Running in DEVELOPMENT mode"
+          fi
+
+# ============================================================================
+# KEY CONCEPTS DEMONSTRATED
+# ============================================================================
+#
+# 1. TRIGGERS (on:)
+#    - push: When code is pushed
+#    - pull_request: When PR is opened/updated
+#    - workflow_dispatch: Manual trigger
+#    - schedule: Cron-based scheduling
+#
+# 2. JOBS
+#    - Run in parallel by default
+#    - Use 'needs' to create dependencies
+#    - Each job runs in fresh VM
+#
+# 3. STEPS
+#    - Sequential within a job
+#    - Can run shell commands or actions
+#    - Share workspace within job
+#
+# 4. ACTIONS (uses:)
+#    - actions/checkout@v4: Clone repository
+#    - actions/setup-python@v5: Install Python
+#    - actions/cache@v4: Cache dependencies
+#    - actions/upload-artifact@v4: Save files
+#
+# 5. EXPRESSIONS
+#    - ${{ github.* }}: Context variables
+#    - ${{ env.* }}: Environment variables
+#    - ${{ secrets.* }}: Repository secrets
+#    - ${{ matrix.* }}: Matrix values
+#
+# 6. CONDITIONALS
+#    - if: Run job/step conditionally
+#    - strategy.matrix: Test multiple configurations
+#    - fail-fast: Stop on first failure
+#
+# 7. ARTIFACTS
+#    - Share files between jobs
+#    - Upload build outputs
+#    - retention-days: How long to keep
+#
+# 8. CACHING
+#    - Cache dependencies between runs
+#    - Key based on file hash
+#    - Speeds up workflows significantly
+#
+# ============================================================================
+# COMMON GITHUB ACTIONS PATTERNS
+# ============================================================================
+#
+# Pattern 1: Cache Python dependencies
+# -------------------------------------
+# - name: Cache pip packages
+#   uses: actions/cache@v4
+#   with:
+#     path: ~/.cache/pip
+#     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+#
+# Pattern 2: Set up Python with uv
+# ---------------------------------
+# - name: Install uv
+#   run: curl -LsSf https://astral.sh/uv/install.sh | sh
+# - name: Install dependencies
+#   run: uv pip install -r requirements.txt
+#
+# Pattern 3: Run on schedule
+# ---------------------------
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'  # Daily at midnight
+#
+# Pattern 4: Only run on specific paths
+# --------------------------------------
+# on:
+#   push:
+#     paths:
+#       - 'src/**'
+#       - 'tests/**'
+#
+# Pattern 5: Fail fast in matrix
+# -------------------------------
+# strategy:
+#   matrix:
+#     python-version: ["3.10", "3.11", "3.12"]
+#   fail-fast: true
+#
+# Pattern 6: Continue on error
+# -----------------------------
+# - name: Optional step
+#   run: some-command
+#   continue-on-error: true
+#
+# Pattern 7: Set job outputs
+# ---------------------------
+# - name: Set output
+#   id: vars
+#   run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+# - name: Use output
+#   run: echo "Short SHA: ${{ steps.vars.outputs.sha_short }}"
+#
+# ============================================================================
+# USAGE
+# ============================================================================
+#
+# To use this workflow:
+# 1. Create .github/workflows/ directory in your repository
+# 2. Save this file as .github/workflows/basic.yml
+# 3. Push to GitHub
+# 4. View workflow runs at: github.com/USER/REPO/actions
+#
+# To add secrets:
+# 1. Go to repository settings
+# 2. Navigate to Secrets and variables → Actions
+# 3. Add new repository secret
+# 4. Use in workflow: ${{ secrets.SECRET_NAME }}
+#
+# To manually trigger:
+# 1. Go to Actions tab
+# 2. Select workflow
+# 3. Click "Run workflow"
+#
+# ============================================================================
