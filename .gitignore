@@ -27,9 +27,6 @@ ENV/
 # Data files (large dataset)
 data/job_post_data.json
 
-# Vector indexes (generated, can be recreated)
-indexes/
-
 # Personal notes and Claude-specific files
 CLAUDE.md
 meta/

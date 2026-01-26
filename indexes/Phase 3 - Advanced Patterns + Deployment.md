@@ -1,0 +1,61 @@
+
+
+- [ ] **Module 3.1: Advanced Agent Patterns, reasoning, self-improvement** `openai`, `pydantic`
+    - [ ] `01_react_pattern.py` - Reasoning + Acting interleaved
+    - [ ] `02_reflection.py` - Agent critiques its own output
+    - [ ] `03_planning.py` - Decompose complex tasks into steps
+    - [ ] `04_self_correction.py` - Detect and fix errors automatically
+    - [ ] `05_confidence_routing.py` - Route based on model confidence
+    - [ ] `06_iterative_refinement.py` - Improve output through multiple passes
+    - [ ] `07_tree_of_thought.py` - Explore multiple reasoning paths
+- [ ] **Module 3.2: Multi-Agent Systems** `openai`, `pydantic`
+    - [ ] `01_agent_handoff.py` - Transfer conversation between agents
+    - [ ] `02_specialized_agents.py` - Create domain-specific agents
+    - [ ] `03_coordinator_pattern.py` - Orchestrator agent delegates to workers
+    - [ ] `04_preference_detector.py` - Detect and store user preferences
+    - [ ] `05_agent_communication.py` - Agents share information
+- [ ] **Module 3.3: Advanced Memory** `openai`, `pydantic`, `chromadb` or `postgresql`
+    - [ ] `01_structured_memory.py` - Store memories in typed schemas
+    - [ ] `02_memory_importance.py` - Prioritize important memories
+    - [ ] `03_memory_consolidation.py` - Merge related memories over time
+    - [ ] `04_preference_memory.py` - Full preference detection + storage
+    - [ ] `05_episodic_memory.py` - Remember specific past interactions
+- [ ] **Module 3.4: Advanced RAG** `chromadb`, `rank-bm25`, `sentence-transformers`, `openai`
+    - [ ] `01_query_rewriting.py` - Transform query for better retrieval
+    - [ ] `02_multi_hop_rag.py` - Multiple retrieval steps for complex questions
+    - [ ] `03_self_rag.py` - Decide when retrieval is needed
+    - [ ] `04_cross_encoder_rerank.py` - Improve retrieval with reranking
+    - [ ] `05_hybrid_search.py` - Combine BM25 + semantic search
+    - [ ] `06_rag_fusion.py` - Reciprocal rank fusion from multiple queries
+- [ ] **Module 3.5: Iterative Processing** `openai`, `asyncio`
+    - [ ] `01_map_reduce.py` - Process chunks then combine results
+    - [ ] `02_progressive_summary.py` - Summarize in stages (para → page → chapter)
+    - [ ] `03_refinement_chain.py` - Iteratively improve output
+    - [ ] `04_hierarchical_processing.py` - Process at multiple levels of abstraction
+    - [ ] `05_batch_processing.py` - Handle thousands of items efficiently
+- [ ] **Module 3.6: FastAPI Basics** `fastapi`, `uvicorn`, `pydantic`
+    - [ ] `01_hello_fastapi.py` - Minimal API setup
+    - [ ] `02_pydantic_validation.py` - Use Pydantic models for API request/response validation
+    - [ ] `03_async_endpoints.py` - Handle concurrent requests
+    - [ ] `04_streaming_response.py` - Stream LLM output to client
+    - [ ] `05_chat_endpoint.py` - Full chat endpoint with history
+    - [ ] `06_rag_endpoint.py` - API for RAG queries
+- [ ] **Module 3.7: Clustering & Topics** `bertopic`, `umap-learn`, `scikit-learn`, `matplotlib`
+    - [ ] `01_kmeans_clustering.py` - Basic document clustering
+    - [ ] `02_umap_visualization.py` - Reduce dimensions for plotting
+    - [ ] `03_bertopic_basics.py` - Automatic topic discovery
+    - [ ] `04_cluster_labeling.py` - Use LLM to name clusters
+    - [ ] `05_topic_coherence.py` - Evaluate topic quality
+    - [ ] `06_interactive_exploration.py` - Explore clusters programmatically
+- [ ] **Module 3.8: Evaluation Systems** `openai`, `pydantic`, `json`
+    - [ ] `01_eval_dataset.py` - Build test cases from real data, data quality
+    - [ ] `02_eval_pipeline.py` - Automated evaluation runs
+    - [ ] `03_regression_testing.py` - Catch quality regressions
+    - [ ] `04_prompt_versioning.py` - Track prompt changes and performance
+    - [ ] `05_cost_tracking.py` - Monitor and optimize API costs
+    - [ ] `06_human_eval_design.py` - Design effective human evaluation
+- [ ] **Module 3.9: Document Processing** `pymupdf`, `pypdf`
+    - [ ] `01_pdf_pymupdf.py` - Extract text from PDFs with PyMuPDF
+    - [ ] `02_pdf_pypdf.py` - Alternative PDF extraction with pypdf
+    - [ ] `03_pdf_with_structure.py` - Extract headings, paragraphs, tables from structured PDFs
+    - [ ] `04_pdf_to_chunks.py` - Full pipeline: PDF → chunks → index

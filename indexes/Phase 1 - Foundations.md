@@ -1,0 +1,51 @@
+
+
+- [ ]  **1.1: OpenAI API**
+	- [ ] `01_basic_call.py` - Simplest API call 
+	- [ ] `02_input_formats.py` - String vs message list input
+	- [ ] `03_system_prompt.py` - System prompts for behavior
+	- [ ] `04_parameters.py` - temperature, max_tokens
+	- [ ] `05_response_object.py` - Understanding response structure
+	- [ ] `06_streaming.py` - Stream tokens as they arrive
+	- [ ] `07_models.py` - Different models and when to use
+	- [ ] `08_error_handling.py` - Handling API errors
+- [ ] 2.2: Pydantic
+	- [ ] `01_basic_model.py` - Define models with type hints
+	- [ ] `02_field_types.py` - str, int, list, dict, datetime
+	- [ ] `03_validation.py` - Field constraints and validators
+	- [ ] `04_nested_models.py` - Models containing other models
+	- [ ] `05_json_serialization.py` - Convert to/from JSON
+	- [ ] `06_from_raw_data.py` - Parse your job data into models
+	- [ ] `07_model_methods.py` - Computed fields and methods
+	- [ ] `08_enums_literals.py` - Restrict values to options
+- [ ] **structured outputs**
+	- [ ] `01_json_mode.py` - Force JSON output
+	- [ ] `02_structured_output.py` - Pydantic schema for output
+	- [ ] `03_extraction.py` - Extract structured data from text
+	- [ ] `04_classification.py` - Classify into categories
+	- [ ] `05_complex_extraction.py` - Nested models for rich extraction
+	- [ ] `06_batch_processing.py` - Process multiple items
+	- [ ] `07_schema_inspection.py` - See the JSON schema Pydantic generates
+- [ ] **conversations**
+	- [ ] `01_multi_turn.py` - Basic multi-turn conversation
+	- [ ] `02_conversation_class.py` - Encapsulate in a class
+	- [ ] `03_context_window.py` - Truncate when context too large
+	- [ ] `04_summarization.py` - Summarize old context
+	- [ ] `05_interactive_chat.py` - Simple interactive loop
+	- [ ] `06_streaming_chat.py` - Interactive with streaming
+- **embeddings**
+	- [ ] `01_basic_embedding.py` - Create a single embedding
+	- [ ] `02_embedding_models.py` - Compare embedding models
+	- [ ] `03_batch_embeddings.py` - Embed multiple texts
+	- [ ] `04_cosine_similarity.py` - Measure vector similarity
+	- [ ] `05_simple_search.py` - Basic vector search
+	- [ ] `06_job_search.py` - Search your job data
+	- [ ] `07_save_load_embeddings.py` - Persist to disk
+	- [ ] `08_numpy_operations.py` - Essential numpy for vectors
+- **06-vector-search**
+	- [ ] `01_chroma_basics.py` - Basic add and query
+	- [ ] `02_persistent_storage.py` - Save to disk
+	- [ ] `03_metadata_filtering.py` - Filter by metadata
+	- [ ] `04_openai_embeddings.py` - Use OpenAI embeddings
+	- [ ] `05_job_database.py` - Build job search database
+	- [ ] `06_crud_operations.py` - Create, Read, Update, Delete
