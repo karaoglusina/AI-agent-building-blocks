@@ -1,0 +1,115 @@
+# Pydantic Basics
+
+Pydantic is a data validation library for Python. It's not AI-specific, but it's essential for AI engineering because it's how you define the structure of LLM outputs.
+
+## Why This Matters
+
+When you ask an LLM to extract information from a job posting, you don't want a blob of text. You want structured data: title, company, salary, location - each in the right type, validated, ready to use.
+
+Pydantic is the bridge. You define a schema, OpenAI guarantees the output matches it, and Pydantic validates and converts the data.
+
+## The Key Ideas
+
+### Define Models with Type Hints
+
+```python
+from pydantic import BaseModel
+
+class JobSummary(BaseModel):
+    title: str
+    company: str
+    location: str
+    salary_min: int | None
+    remote: bool
+```
+
+That's a schema. Any data that doesn't match gets rejected.
+
+### Validation is Automatic
+
+```python
+# This works
+job = JobSummary(
+    title="ML Engineer",
+    company="Acme",
+    location="NYC",
+    salary_min=150000,
+    remote=True
+)
+
+# This fails - salary_min should be int, not string
+job = JobSummary(title="...", salary_min="high")  # ValidationError
+```
+
+### Serialization and Parsing
+
+```python
+# To dict
+data = job.model_dump()
+
+# To JSON string
+json_str = job.model_dump_json()
+
+# From dict
+job = JobSummary.model_validate(data)
+
+# From JSON string
+job = JobSummary.model_validate_json(json_str)
+```
+
+### Nested Models
+
+Real data is nested. Pydantic handles this:
+
+```python
+class Company(BaseModel):
+    name: str
+    size: str
+
+class Job(BaseModel):
+    title: str
+    company: Company  # Nested model
+    skills: list[str]
+```
+
+### Enums and Literals
+
+For classification tasks, restrict values to specific options:
+
+```python
+from typing import Literal
+
+class JobClassification(BaseModel):
+    category: Literal["engineering", "design", "product", "other"]
+    seniority: Literal["junior", "mid", "senior", "lead"]
+```
+
+The LLM can only output these exact values.
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_basic_model.py | Define models with type hints |
+| 02_field_types.py | Common types: str, int, list, dict, datetime |
+| 03_validation.py | Field constraints and custom validators |
+| 04_nested_models.py | Models containing other models |
+| 05_json_serialization.py | Convert to/from JSON and dicts |
+| 06_from_raw_data.py | Parse the job data into models |
+| 07_model_methods.py | Add computed fields and methods |
+| 08_enums_literals.py | Restrict values to specific options |
+
+## Things to Think About
+
+- **What happens with extra fields in the input?** By default, Pydantic ignores them. You can change this behavior.
+- **How strict should validation be?** Too strict and valid data gets rejected. Too loose and garbage gets through.
+- **Why not just use dicts?** You lose type safety, autocomplete, and validation. Bugs hide until runtime.
+
+## Related
+
+- [Structured Output](./structured-output.md) - Using Pydantic with OpenAI
+- [RAG Pipeline](../phase-2-building-ai-systems/rag-pipeline.md) - Structured data in retrieval
+
+## Book References
+
+- AI_eng.2 - Structured Outputs

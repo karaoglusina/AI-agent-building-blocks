@@ -1,0 +1,204 @@
+# Evaluation Systems
+
+You've built a system. How do you know if it's good? How do you know if changes make it better or worse? Evaluation systems answer these questions systematically.
+
+## Why This Matters
+
+Without evaluation, you're guessing. "It seems to work better" isn't the same as "accuracy improved 12%." Production systems need rigorous measurement.
+
+For our job market analyzer, evaluation tells us: Are we finding the right jobs? Are classifications accurate? Are answers helpful? And crucially: did that prompt change make things better or worse?
+
+## The Key Ideas
+
+### Test Datasets
+
+Good evaluation starts with good test data:
+
+```python
+test_cases = [
+    {
+        "query": "remote ML engineer jobs",
+        "expected_skills": ["Python", "TensorFlow"],
+        "expected_type": "search"
+    },
+    {
+        "query": "compare the first two results",
+        "expected_type": "compare",
+        "requires_context": True
+    },
+    # ...
+]
+```
+
+Representative samples. Clear expected outcomes. Include edge cases.
+
+### Automated Pipeline
+
+Run evaluation automatically:
+
+```python
+def evaluate(system, test_cases):
+    results = []
+    for case in test_cases:
+        output = system(case["query"])
+        score = compute_score(output, case["expected"])
+        results.append({
+            "case": case,
+            "output": output,
+            "score": score
+        })
+
+    return {
+        "accuracy": mean([r["score"] for r in results]),
+        "failures": [r for r in results if r["score"] < 0.5]
+    }
+```
+
+Run this after every change. Catch problems before deployment.
+
+### Regression Testing
+
+Compare to baseline:
+
+```python
+def check_regression(current_results, baseline_results, threshold=0.05):
+    current_accuracy = current_results["accuracy"]
+    baseline_accuracy = baseline_results["accuracy"]
+
+    if current_accuracy < baseline_accuracy - threshold:
+        return {
+            "status": "REGRESSION",
+            "drop": baseline_accuracy - current_accuracy
+        }
+    elif current_accuracy > baseline_accuracy + threshold:
+        return {
+            "status": "IMPROVEMENT",
+            "gain": current_accuracy - baseline_accuracy
+        }
+    else:
+        return {"status": "STABLE"}
+```
+
+Block deployments that degrade quality.
+
+### Prompt Versioning
+
+Track prompts like code:
+
+```python
+prompts = {
+    "v1": "You are a job search assistant...",
+    "v2": "You are an expert job search assistant. Be concise...",
+    "v3": "You are an expert job search assistant. Be concise. Always cite sources..."
+}
+
+def evaluate_prompt_version(version: str):
+    system = create_system(prompts[version])
+    return evaluate(system, test_cases)
+
+# Compare versions
+results = {v: evaluate_prompt_version(v) for v in prompts}
+best = max(results, key=lambda v: results[v]["accuracy"])
+```
+
+A/B test prompt variants. Roll back if needed.
+
+### Cost Tracking
+
+Monitor API costs:
+
+```python
+import tiktoken
+
+def estimate_cost(messages, model="gpt-4o-mini"):
+    enc = tiktoken.encoding_for_model(model)
+    tokens = sum(len(enc.encode(m["content"])) for m in messages)
+
+    rates = {
+        "gpt-4o-mini": {"input": 0.15, "output": 0.6},  # per 1M tokens
+        "gpt-4o": {"input": 5, "output": 15}
+    }
+    # Estimate based on typical input/output ratio
+    return tokens * rates[model]["input"] / 1_000_000
+```
+
+Know what you're spending. Optimize where it matters.
+
+### Human Evaluation
+
+Automated metrics miss nuance. Design human evaluation:
+
+```python
+evaluation_rubric = {
+    "relevance": "Is the answer relevant to the question? (1-5)",
+    "accuracy": "Is the information correct? (1-5)",
+    "helpfulness": "Would this help a real user? (1-5)",
+    "tone": "Is the tone appropriate? (1-5)"
+}
+
+# Multiple annotators per item
+# Measure inter-annotator agreement
+# Use gold standards for quality control
+```
+
+Humans catch issues automated metrics miss.
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_eval_dataset.py | Creating test data |
+| 02_eval_pipeline.py | Automated evaluation |
+| 03_regression_testing.py | Compare to baseline |
+| 04_prompt_versioning.py | Track and compare prompts |
+| 05_cost_tracking.py | Monitor API costs |
+| 06_human_eval_design.py | Structure human evaluation |
+
+## Evaluation Workflow
+
+```
+1. Create test dataset
+2. Run baseline evaluation
+3. Save as baseline
+4. Make changes
+5. Run evaluation again
+6. Compare to baseline
+7. If regression → investigate
+   If improvement → update baseline
+```
+
+## Metrics by Task
+
+| Task | Primary Metrics |
+|------|-----------------|
+| Classification | Precision, Recall, F1 |
+| Retrieval | MRR, Recall@K, NDCG |
+| Generation | LLM-judge, ROUGE |
+| Extraction | Exact match, F1 |
+
+## Cost Optimization
+
+| Strategy | Savings |
+|----------|---------|
+| Use gpt-4o-mini instead of gpt-4o | 10-20x |
+| Shorter prompts | Linear |
+| Cache common queries | High for repeat queries |
+| Batch processing | Reduces overhead |
+
+## Things to Think About
+
+- **How many test cases?** 50-100 for quick checks. More for production decisions.
+- **What makes a good test case?** Clear expected outcome, representative of real usage, includes edge cases.
+- **When do metrics lie?** When they don't match real user experience. Always sanity check with human review.
+
+## Related
+
+- [Evaluation Basics](../phase-2-building-ai-systems/evaluation-basics.md) - Individual metrics
+- [RAG Pipeline](../phase-2-building-ai-systems/rag-pipeline.md) - RAG evaluation
+- [Observability](../phase-4-production/observability.md) - Production monitoring
+
+## Book References
+
+- AI_eng.3 - Evaluation metrics
+- AI_eng.4 - Evaluation systems
+- hands_on_LLM.III.12 - Human evaluation

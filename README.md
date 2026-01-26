@@ -38,7 +38,7 @@ I shaped the scope and organization of modules was by studying the following boo
 
 The repository spans the entire stack of AI agent development:
 
-### Phase 1: Foundations (✅ 43 scripts)
+### Phase 1: Foundations
 
 Learn to work with the OpenAI API and structure your data:
 
@@ -49,7 +49,7 @@ Learn to work with the OpenAI API and structure your data:
 - **Embeddings**: Vector representations, similarity search, semantic retrieval
 - **Vector Databases**: ChromaDB basics, metadata filtering, CRUD operations
 
-### Phase 2: Core AI Engineering (✅ 65 scripts)
+### Phase 2: Core AI Engineering
 
 The patterns you'll use daily when building AI systems:
 
@@ -63,7 +63,7 @@ The patterns you'll use daily when building AI systems:
 - **Prompt Engineering**: Chain-of-thought, few-shot examples, defensive prompting, self-consistency
 - **Evaluation**: Classification/retrieval/generation metrics, LLM-as-judge, A/B testing
 
-### Phase 3: Advanced Patterns (✅ 50 scripts)
+### Phase 3: Advanced Patterns 
 
 Sophisticated agent behaviors and production concerns:
 
@@ -77,7 +77,7 @@ Sophisticated agent behaviors and production concerns:
 - **Evaluation Systems** (6 scripts): Test datasets, evaluation pipelines, regression testing, prompt versioning, cost tracking, human eval design
 - **Document Processing** (4 scripts): PDF parsing with PyMuPDF/pypdf, structured extraction, full pipeline to chunks
 
-### Phase 4: Production & Operations (📋 35 scripts planned, 1 module complete)
+### Phase 4: Production & Operations
 
 Taking agents to production:
 
@@ -90,7 +90,7 @@ Taking agents to production:
 - **Cloud Deployment** (4 files): VM setup guide, HTTPS configuration, health checks, logging configuration
 - **CI/CD Basics** (3 files): GitHub Actions workflows for testing, automation, deployment
 
-### Phase 5: Specialization (📋 20 scripts planned)
+### Phase 5: Specialization (✅ 17 scripts)
 
 Advanced topics for specific use cases:
 

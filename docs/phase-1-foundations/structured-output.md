@@ -1,0 +1,118 @@
+# Structured Output
+
+This is where OpenAI and Pydantic come together. Instead of hoping the LLM returns valid JSON you can parse, you define a schema and OpenAI guarantees the output matches.
+
+## Why This Matters
+
+Without structured output, you're constantly wrestling with parsing:
+- "Sometimes it returns JSON, sometimes prose"
+- "It forgot the closing brace"
+- "The field names are different every time"
+
+Structured output eliminates these problems. You define what you want, you get exactly that.
+
+For our job market analyzer, this is how we extract skills, classify roles, and turn unstructured job descriptions into data we can search and analyze.
+
+## The Key Ideas
+
+### The Basic Pattern
+
+```python
+from openai import OpenAI
+from pydantic import BaseModel
+
+class ExtractedSkills(BaseModel):
+    technical: list[str]
+    soft: list[str]
+    years_experience: int | None
+
+client = OpenAI()
+response = client.beta.chat.completions.parse(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "user", "content": f"Extract skills from: {job_description}"}
+    ],
+    response_format=ExtractedSkills
+)
+
+skills = response.choices[0].message.parsed  # Already a Pydantic model
+```
+
+Notice: `response_format=ExtractedSkills`. OpenAI sees the schema and constrains generation to match it.
+
+### Field Descriptions Help
+
+The model sees your field names and descriptions. Make them clear:
+
+```python
+class JobAnalysis(BaseModel):
+    """Analysis of a job posting."""
+
+    is_remote: bool = Field(description="True if fully remote or remote-first")
+    required_skills: list[str] = Field(description="Skills explicitly required")
+    nice_to_have: list[str] = Field(description="Skills mentioned as preferred but not required")
+```
+
+Good descriptions → better extraction.
+
+### Classification with Literals
+
+Need to classify into categories? Use Literal types:
+
+```python
+from typing import Literal
+
+class JobCategory(BaseModel):
+    category: Literal["ml_engineer", "data_scientist", "ml_ops", "research", "other"]
+    confidence: Literal["high", "medium", "low"]
+```
+
+The model can only output these exact values. No "ML Engineering" vs "Machine Learning Engineer" inconsistency.
+
+### Complex Nested Structures
+
+Real extraction often produces nested data:
+
+```python
+class Requirement(BaseModel):
+    skill: str
+    level: Literal["beginner", "intermediate", "expert"]
+    required: bool
+
+class JobPosting(BaseModel):
+    title: str
+    company: str
+    requirements: list[Requirement]
+    salary_range: dict[str, int] | None
+```
+
+Build schemas that match your domain.
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_json_mode.py | Force JSON output (older approach) |
+| 02_structured_output.py | Pydantic schema for output |
+| 03_extraction.py | Extract structured data from text |
+| 04_classification.py | Classify into predefined categories |
+| 05_complex_extraction.py | Nested models for rich extraction |
+| 06_batch_processing.py | Process multiple items |
+| 07_schema_inspection.py | See the JSON schema Pydantic generates |
+
+## Things to Think About
+
+- **What if the model can't find the information?** Use `Optional` types and handle None. The model will return None rather than hallucinate.
+- **How complex can schemas get?** There are limits, but most reasonable schemas work. If you hit issues, simplify.
+- **Why use this instead of just asking for JSON in the prompt?** Schema enforcement is more reliable. The model is constrained at the generation level, not just instructed.
+
+## Related
+
+- [Pydantic Basics](./pydantic-basics.md) - Understanding the schema side
+- [Information Extraction](../phase-2-building-ai-systems/information-extraction.md) - Advanced extraction techniques
+- [Classification & Routing](../phase-2-building-ai-systems/classification-routing.md) - Using classification in systems
+
+## Book References
+
+- AI_eng.2 - Structured Outputs
+- hands_on_LLM.II.6 - Working with structured data

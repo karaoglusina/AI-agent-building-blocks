@@ -1,0 +1,113 @@
+# Fine-tuning LLMs
+
+Fine-tuning takes a pre-trained model and adapts it to your specific task. It sounds magical - "just train it on my data!" - but the reality is more nuanced.
+
+## Why This Matters
+
+Fine-tuning is often the *last* thing you should try, not the first. Here's the hierarchy I learned to follow:
+
+```
+Most Problems                      Fewest Problems
+     |                                   |
+Prompt Engineering → RAG → Fine-tuning → Pre-training
+     |                                   |
+Cheapest/Fastest                    Most Expensive
+```
+
+Start with prompt engineering. If the model has the knowledge but needs guidance, that's usually enough. Add RAG if you need specific knowledge the model doesn't have. Only fine-tune when you need consistent behavior that prompting can't achieve.
+
+For the job market analyzer, I might fine-tune if:
+- Zero-shot classification of job roles isn't consistent enough
+- I need a specific output format that the model keeps deviating from
+- I want a smaller, faster model that behaves like a larger one for my specific task
+
+## The Key Ideas
+
+### When to Fine-tune
+
+Fine-tune when:
+- You have 500+ high-quality examples
+- Need consistent output format or style
+- Domain-specific language (legal, medical)
+- Base model fails despite good prompts
+- Need lower latency than RAG provides
+
+Don't fine-tune when:
+- You have fewer than 50 examples (prompt engineer instead)
+- You need current information (use RAG)
+- The task is general-purpose
+- The base model already works well
+
+### LoRA: The Practical Path
+
+Traditional fine-tuning updates every parameter in the model. LoRA (Low-Rank Adaptation) trains small adapter matrices instead:
+
+```
+Traditional: Update 7 billion parameters
+LoRA:        Update ~1 million parameters
+```
+
+This means:
+- Train 7B models on consumer GPUs (RTX 3090)
+- Iterate in hours, not days
+- Switch between adapters easily
+- Minimal risk of forgetting general capabilities
+
+QLoRA combines LoRA with quantization - now you can train 7B models in ~5GB VRAM.
+
+### Data Quality Over Quantity
+
+The most neglected part of fine-tuning: data preparation.
+
+500 perfect examples beat 5000 noisy ones. Every. Single. Time.
+
+What makes a good training example:
+- Clear instruction/response pair
+- Consistent formatting
+- Diverse scenarios covered
+- Edge cases included
+- No errors, duplicates, or contradictions
+
+### Alignment Techniques
+
+**SFT (Supervised Fine-Tuning)**: Train on instruction/response pairs. Simple supervised learning. Where most people start.
+
+**DPO (Direct Preference Optimization)**: Train on "this response is better than that one" pairs. Simpler than RLHF, often just as effective.
+
+**RLHF**: What ChatGPT uses. Complex but powerful. Requires reward model.
+
+For most use cases, SFT + maybe DPO is sufficient.
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_when_to_finetune.py | Decision framework for when to fine-tune |
+| 02_data_preparation.py | Format and validate training data |
+| 03_lora_basics.py | Parameter-efficient fine-tuning |
+| 04_quantization.py | Run models with reduced precision |
+| 05_sft_rlhf_dpo_overview.py | Alignment techniques explained |
+| 06_evaluation.py | Measure if fine-tuning helped |
+
+## Things to Think About
+
+- **How do you know if fine-tuning helped?** Always compare to baseline. Measure multiple metrics. Don't just go by vibes.
+
+- **What if you don't have enough data?** You probably don't need fine-tuning. Try prompt engineering with good examples.
+
+- **Can fine-tuning hurt the model?** Yes. Catastrophic forgetting is real. That's why LoRA is safer - you're not modifying the base weights.
+
+- **OpenAI fine-tuning vs self-hosted?** OpenAI is simpler for GPT-3.5 experiments. Self-hosted gives you control and works out cheaper for repeated use.
+
+## Related
+
+- [Prompt Engineering](../phase-2-building-ai-systems/prompt-engineering.md) - Try this first
+- [RAG Pipeline](../phase-2-building-ai-systems/rag-pipeline.md) - Often better than fine-tuning for knowledge
+- [Custom Embeddings](./custom-embeddings.md) - Fine-tune embeddings for retrieval
+- [Evaluation Systems](../phase-3-advanced-patterns/evaluation-systems.md) - Measure improvements
+
+## Book References
+
+- AI_eng.7 - Fine-tuning and customization
+- AI_eng.8 - Data preparation and quality
+- hands_on_LLM.III.12 - LoRA, QLoRA, and PEFT

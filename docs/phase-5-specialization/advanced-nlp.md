@@ -1,0 +1,107 @@
+# Advanced NLP
+
+Traditional NLP techniques - dependency parsing, relation extraction, coreference resolution. They're not as flashy as "just ask GPT-4", but they're fast, free, precise, and interpretable.
+
+## Why This Matters
+
+I used to think LLMs made traditional NLP obsolete. Then I tried extracting structured data from 10,000 documents and realized I couldn't afford 10,000 API calls. Plus, when the LLM made errors, I couldn't easily debug why.
+
+Traditional NLP techniques fill a different niche:
+- **Speed**: 10-50ms instead of 500-2000ms
+- **Cost**: Free after initial setup
+- **Precision**: Rules extract exactly what you specify
+- **Interpretability**: You can see exactly what was matched
+
+For the job market analyzer, traditional NLP could:
+- Extract skills from job descriptions faster than LLM calls
+- Parse job requirements into structured components
+- Resolve pronouns to understand what "they" and "it" refer to
+
+The smart approach: use traditional NLP for speed and precision, LLMs for understanding and ambiguity.
+
+## The Key Ideas
+
+### Dependency Parsing
+
+Reveals grammatical relationships between words:
+
+```
+"Tesla produces electric vehicles"
+
+Dependencies:
+  produces (ROOT)
+  ├── Tesla (subject)
+  └── vehicles (object)
+      └── electric (modifier)
+```
+
+Use cases:
+- Extract subject-verb-object triples
+- Find modifiers and attributes
+- Understand sentence structure
+
+spaCy handles this well, and it's fast.
+
+### Relation Extraction
+
+Identifies semantic relationships between entities:
+
+```
+"Steve Jobs founded Apple in 1976"
+
+Entities: Steve Jobs (PERSON), Apple (ORG), 1976 (DATE)
+Relations: (Steve Jobs, FOUNDED, Apple), (Apple, FOUNDED_IN, 1976)
+```
+
+Approaches:
+- **Rule-based**: High precision, lower recall
+- **Supervised ML**: Needs labeled data
+- **LLM-based**: Zero-shot but expensive
+
+In practice, you often combine these. Rules for common patterns, LLM for edge cases.
+
+### Coreference Resolution
+
+Links expressions that refer to the same entity:
+
+```
+"Apple released iPhone. It was revolutionary."
+
+Coreference: "It" = "iPhone"
+```
+
+Without coreference resolution, you might extract "(It, was, revolutionary)" which is useless. With it, you get "(iPhone, was, revolutionary)".
+
+This matters for information extraction at scale. If you're building a knowledge graph from text, you need to know what "it", "they", and "the company" actually refer to.
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_dependency_parsing.py | Extract grammatical structure |
+| 02_relation_extraction.py | Find relationships between entities |
+| 03_coreference.py | Resolve pronouns to antecedents |
+
+## Things to Think About
+
+- **When do I use NLP instead of LLMs?** For speed (processing thousands of documents), precision (exact pattern matching), and cost (no API charges). Use LLMs for understanding complex context and handling ambiguity.
+
+- **How accurate is spaCy?** Good, not perfect. Small models are faster, large models are more accurate. Complex sentences can trip up any parser. Validate results on your data.
+
+- **Can I combine NLP and LLMs?** Yes, and you should. Use NLP for fast, structured extraction. Use LLMs to validate uncertain cases or handle complex reasoning.
+
+- **What about domain-specific text?** General spaCy models might miss domain jargon. Consider training custom NER models or adding domain patterns.
+
+## Related
+
+- [Information Extraction](../phase-2-building-ai-systems/information-extraction.md) - Broader extraction techniques
+- [Text Preparation](../phase-2-building-ai-systems/text-preparation.md) - Preparing text for NLP
+- [Fine-tuning](./fine-tuning.md) - Train custom models for NLP tasks
+- [Classification and Routing](../phase-2-building-ai-systems/classification-routing.md) - Related classification approaches
+
+## Book References
+
+- NLP_cook.2 - Dependency parsing techniques
+- speach_lang.III.19 - Syntax and dependency grammar
+- speach_lang.III.20 - Relation extraction methods
+- speach_lang.III.23 - Coreference resolution

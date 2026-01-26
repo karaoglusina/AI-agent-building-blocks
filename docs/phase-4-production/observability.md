@@ -1,0 +1,177 @@
+# Observability
+
+You can't improve what you can't measure. Observability lets you see what's happening in production - every LLM call, every retrieval, every cost.
+
+## Why This Matters
+
+Production AI systems are black boxes without observability. Users report slow responses - was it the LLM? The retrieval? The network? Costs spike - which queries are expensive? Quality drops - which prompts changed?
+
+For our job market analyzer, observability means tracking every search, monitoring costs, and catching problems before users complain.
+
+## The Key Ideas
+
+### Tracing
+
+See the full journey of a request:
+
+```python
+from langfuse.decorators import observe
+
+@observe()
+def rag_pipeline(query: str) -> str:
+    docs = retrieve(query)  # Traced automatically
+    answer = generate(docs)  # Traced automatically
+    return answer
+```
+
+Each call creates a trace with timing, inputs, outputs.
+
+### Spans
+
+Break traces into steps:
+
+```python
+with langfuse_context.observe(name="retrieval"):
+    docs = retrieve_documents(query)
+
+with langfuse_context.observe(name="generation"):
+    answer = generate_response(docs)
+```
+
+See which step is slow, expensive, or failing.
+
+### Scores
+
+Track quality metrics:
+
+```python
+langfuse_context.score_current_trace(
+    name="response_quality",
+    value=quality_score,
+    comment="User gave thumbs up"
+)
+```
+
+Correlate quality with other factors.
+
+### Cost Monitoring
+
+Track spending:
+
+```python
+langfuse_context.update_current_observation(
+    metadata={
+        "cost_usd": calculate_cost(tokens),
+        "model": "gpt-4o-mini",
+        "tokens_in": input_tokens,
+        "tokens_out": output_tokens
+    }
+)
+```
+
+Know where money goes.
+
+### Langfuse Setup
+
+```python
+# Automatic with decorator
+from langfuse.decorators import observe, langfuse_context
+
+@observe()
+def my_function():
+    # Automatically traced
+    ...
+
+# Manual control
+from langfuse import Langfuse
+langfuse = Langfuse()
+trace = langfuse.trace(name="operation")
+# ... do work ...
+trace.update(output={"result": "success"})
+langfuse.flush()
+```
+
+## What's in This Module
+
+| Script | What it shows |
+|--------|---------------|
+| 01_langfuse_setup.py | Initialize and verify connection |
+| 02_trace_llm_calls.py | Log LLM interactions |
+| 03_trace_rag_pipeline.py | End-to-end RAG tracing |
+| 04_cost_monitoring.py | Track token usage and costs |
+| 05_custom_metrics.py | Add business metrics |
+
+## Dashboard Features
+
+### Traces View
+- All requests with timing
+- Filter by user, session, tags
+- Drill into nested spans
+
+### Analytics
+- Token usage over time
+- Cost breakdown by model
+- Latency percentiles
+- Error rates
+
+### Evaluation
+- Quality scores
+- User feedback
+- A/B comparisons
+
+## Best Practices
+
+### Always Flush
+```python
+# End of request or script
+langfuse.flush()
+```
+
+### Rich Metadata
+```python
+langfuse_context.update_current_trace(
+    user_id="user123",
+    session_id="session456",
+    tags=["production", "rag"],
+    metadata={"customer_tier": "enterprise"}
+)
+```
+
+### Handle Errors
+```python
+try:
+    result = llm_call()
+except Exception as e:
+    langfuse_context.update_current_observation(
+        level="ERROR",
+        status_message=str(e)
+    )
+    raise
+```
+
+## Cost Reference
+
+| Model | Input ($/1M tokens) | Output ($/1M tokens) |
+|-------|--------------------:|---------------------:|
+| gpt-4o-mini | $0.15 | $0.60 |
+| gpt-4o | $2.50 | $10.00 |
+| text-embedding-3-small | $0.02 | - |
+
+Track these to understand spending.
+
+## Things to Think About
+
+- **What should you trace?** Everything in production. Sample in high-volume scenarios.
+- **What about PII in traces?** Don't log sensitive data. Redact before tracing.
+- **Self-hosted vs cloud?** Langfuse can be self-hosted if data residency matters.
+
+## Related
+
+- [Evaluation Systems](../phase-3-advanced-patterns/evaluation-systems.md) - Using traces for evaluation
+- [Guardrails](./guardrails.md) - Monitor guardrail effectiveness
+- [CI/CD](./cicd.md) - Automated quality checks
+
+## Book References
+
+- AI_eng.10 - Monitoring and deployment
+- AI_eng.4 - Cost optimization
