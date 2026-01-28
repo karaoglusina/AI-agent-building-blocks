@@ -25,8 +25,6 @@ Each script follows these principles:
 - **Type-hinted**: All functions have type annotations
 - **Documented**: Clear docstrings explaining the "why" not just the "what"
 
-
-
 ## What's Covered
 
 I shaped the scope and organization of modules was by studying the following books. These books helped me understand what components are needed when building AI systems, ensuring the curriculum covers the full stack from basics to production.
@@ -157,31 +155,6 @@ These scripts show individual components. A real agent might combine:
 4. **Agent Orchestration** (2.5) - Give the agent tools to search, extract, and respond
 5. **Memory Patterns** (2.7) - Remember user preferences across conversations
 6. **Context Engineering** (2.6) - Fit everything into the context window
+
 Each piece is simple. The complexity comes from putting them together thoughtfully.
 
-## Technology Stack
-
-**Core:**
-
-- `openai` - OpenAI API client
-- `pydantic` - Data validation
-- `chromadb` - Vector database
-- `numpy` - Vector operations
-
-**NLP & Text:**
-
-- `spacy` - NER, POS, lemmatization
-- `nltk` - Tokenization, stopwords
-- `keybert` - Keyword extraction
-- `tiktoken` - Token counting
-- `rapidfuzz` - Fuzzy string matching
-
-**Coming in Phase 3-5:**
-
-- FastAPI, SQLAlchemy, Celery, Langfuse, BERTopic, sentence-transformers, and more
-
-## License
-
-## License
-
-**Questions or feedback?** Open an issue or reach out. Happy building! 🚀
