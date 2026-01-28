@@ -24,8 +24,6 @@ ENV/
 # macOS
 .DS_Store
 
-# Data files (large dataset)
-data/job_post_data.json
 
 # Personal notes and Claude-specific files
 CLAUDE.md
