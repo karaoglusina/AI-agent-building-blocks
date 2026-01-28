@@ -16,22 +16,22 @@ For our job market analyzer, this means you can embed job descriptions, search f
 
 ## The Modules
 
-### [OpenAI Basics](./1.1-openai-basics.md)
+### <a href="./1.1-openai-basics.md">OpenAI Basics</a>
 The starting point. How to make API calls, handle responses, use different models, stream output. If you've never called an LLM API, start here.
 
-### [Pydantic Basics](./1.2-pydantic-basics.md)
+### <a href="./1.2-pydantic-basics.md">Pydantic Basics</a>
 Data validation and type safety in Python. This becomes essential when you're parsing LLM outputs and working with structured data. Not AI-specific, but foundational for everything that follows.
 
-### [Structured Output](./1.3-structured-output.md)
+### <a href="./1.3-structured-output.md">Structured Output</a>
 Getting the LLM to return JSON that matches a schema. This is the bridge between natural language and data you can actually use in code. Extraction, classification, complex responses - it all runs through structured output.
 
-### [Conversations](./1.4-conversations.md)
+### <a href="./1.4-conversations.md">Conversations</a>
 Moving beyond single prompts. How to maintain context across messages, handle long conversations, build interactive chat applications. The foundation for any conversational AI.
 
-### [Embeddings](./1.5-embeddings.md)
+### <a href="./1.5-embeddings.md">Embeddings</a>
 Text as vectors. This is how you find similar content, do semantic search, and build RAG systems. Probably the most important concept in the whole curriculum.
 
-### [Vector Search](./1.6-vector-search.md)
+### <a href="./1.6-vector-search.md">Vector Search</a>
 Using ChromaDB to store and search embeddings at scale. When you have 10,000 job postings, you need a real database - not just numpy arrays.
 
 ## The Flow
