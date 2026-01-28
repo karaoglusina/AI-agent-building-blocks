@@ -1,30 +1,44 @@
 # AI Agent Building Blocks
 
-A collection of atomic Python scripts covering every component you need to build AI agents. Each script demonstrates one concept in isolation - no frameworks, just understanding how things actually work.
+A hands-on Python reference for learning/building AI agents from scratch.
 
-I built this repository while learning AI agent development to:
+- `modules/` → runnable Python scripts
+- `docs/` → conceptual walkthroughs and design explanations. Each module has a matching doc that explains *why* the pattern exists, *how* it works, and links to the relevant scripts.
 
-- **Understand the fundamentals** - Writing each pattern from scratch (no LangChain/LlamaIndex) forced me to understand what's actually happening under the hood
-- **Create a comprehensive reference** - When I need to implement something, I have working examples of every component
-- **Document the landscape** - Before building a system, it helps to know what building blocks exist and how they work in isolation
+## How to Use This Repository
 
-Think of this as a reference library of patterns; to build something useful, you need to:
+### As a learning path:
 
-- Understand your specific problem
-- Design an architecture that fits your use case
-- Compose these components thoughtfully
-- Add proper error handling, monitoring, testing, etc.
+If you are new to the field, start from Phase 1 and move forward like a course. The docs introduce each concept step by step and explain the reasoning behind it. Every pattern is written from scratch (no LangChain / LlamaIndex) to expose what happens under the hood. 
+
+If you have some experience, you can jump to whatever concept interests you. The modules are mostly stand alone.
+
+### As building blocks 
+
+When you need to implement something, you’ll find a minimal, working example of each component. Copy these into your own projects and adapt them as part of a larger system. For example, dependin on your problem, a complete agentic system might combine these:
+
+1. Text preparation (2.1)
+2. Vector search (1.6)
+3. RAG pipeline (2.4)
+4. Agent orchestration (2.5)
+5. Memory patterns (2.7)
+6. Context engineering (2.6)
+
+## A Unifying Example
+
+Throughout the docs, a single running example is used: an agent that analyzes job postings to understand the AI job market. This scenario touches most core components:
+
+- **Embeddings** — find jobs similar to a role you like
+- **RAG** — answer market questions without feeding thousands of postings to the LLM
+- **Classification** — categorize roles (ML engineer, researcher, data scientist, etc.)
+- **Agents** — autonomously research, compare, and synthesize insights
+- **Memory** — remember user preferences and search intent
+
+The dataset (`data/job_post_data.json`) contains real job postings from linkedin. It’s messy, diverse, and large enough to surface real-world issues.
 
 ## What's Covered
 
-I shaped the scope and organization of modules by studying the following books. These books helped me understand what components are needed when building AI systems, ensuring the curriculum covers the full stack from basics to production.
-
-- **AI Engineering: Building Applications with Foundation Models** by Chip Huyen (O'Reilly, 2024) - For production patterns and best practices
-- **Hands-On Large Language Models: Language Understanding and Generation** by Jay Alammar and Maarten Grootendorst (O'Reilly, 2024) - For practical LLM applications
-- **Speech and Language Processing** by Daniel Jurafsky and James H. Martin (3rd edition) - For NLP fundamentals
-- **Python Natural Language Processing Cookbook** by Zhenya Antić (Packt Publishing) - For practical NLP patterns
-
-The repository spans the entire stack of AI agent development:
+The scope and module structure is mainly informed by AI engineering and NLP literature (Alammar & Grootendorst, 2024; Huyen, 2025; Jurafsky & Martin, 2025). The goal is full-stack coverage, from API basics to production systems.
 
 ### [Phase 1: Foundations](docs/phase-1-foundations/0.0-phase-1-foundations-index.md)
 
@@ -121,33 +135,6 @@ export OPENAI_API_KEY="sk-..."
 python modules/phase1/1.1-openai-basics/01_basic_call.py
 ```
 
-## How to Use This Repository
-
-### As a Learning Path
-
-Start from Phase 1, module 1.1 and work through in order. Each script builds conceptual understanding.
-
-### As a Reference
-
-Need to implement RAG? Check `modules/phase2/2.4-rag-pipeline/`. Need agent orchestration? Look at `modules/phase2/2.5-agent-orchestration/`.
-
-### As Building Blocks
-
-Copy patterns you need into your project and adapt them. These are starting points, not final solutions.
-
-## Example: What a Complete System Looks Like
-
-These scripts show individual components. A real agent might combine:
-
-1. **Text Preparation** (2.1) - Clean and chunk documents
-2. **Vector Search** (1.6) - Store and retrieve chunks
-3. **RAG Pipeline** (2.4) - Retrieve relevant context
-4. **Agent Orchestration** (2.5) - Give the agent tools to search, extract, and respond
-5. **Memory Patterns** (2.7) - Remember user preferences across conversations
-6. **Context Engineering** (2.6) - Fit everything into the context window
-
-Each piece is simple. The complexity comes from putting them together thoughtfully.
-
 ## Technology Stack
 
 **Core:**
@@ -168,6 +155,13 @@ Each piece is simple. The complexity comes from putting them together thoughtful
 **Production:**
 
 - FastAPI, SQLAlchemy, Celery, Langfuse, BERTopic, sentence-transformers, and more
+
+## References
+
+- Alammar, J., & Grootendorst, M. (2024). *Hands-on large language models: Language understanding and generation*. O’Reilly Media.
+- Antić, Z., & Chakravarty, S. (2024). *Python natural language processing cookbook: Over 60 recipes for building powerful NLP solutions using Python and LLM libraries* (2nd ed.). Packt Publishing.
+- Huyen, C. (2025). *AI engineering: Building applications with foundation models*. O’Reilly Media.
+- Jurafsky, D., & Martin, J. H. (2025). *Speech and language processing: An introduction to natural language processing, computational linguistics, and speech recognition* (3rd ed. draft). Stanford University. 
 
 ## License
 
