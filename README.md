@@ -15,19 +15,9 @@ Think of this as a reference library of patterns; to build something useful, you
 - Compose these components thoughtfully
 - Add proper error handling, monitoring, testing, etc.
 
-Each script follows these principles:
-
-- **Atomic**: One concept per file (~40-80 lines)
-- **No frameworks**: Pure Python + lightweight libraries (understand the internals)
-- **Runnable**: Execute directly with `python script.py`
-- **Self-contained**: Minimal dependencies between scripts
-- **Practical**: Uses real data (job postings dataset) where applicable
-- **Type-hinted**: All functions have type annotations
-- **Documented**: Clear docstrings explaining the "why" not just the "what"
-
 ## What's Covered
 
-I shaped the scope and organization of modules was by studying the following books. These books helped me understand what components are needed when building AI systems, ensuring the curriculum covers the full stack from basics to production.
+I shaped the scope and organization of modules by studying the following books. These books helped me understand what components are needed when building AI systems, ensuring the curriculum covers the full stack from basics to production.
 
 - **AI Engineering: Building Applications with Foundation Models** by Chip Huyen (O'Reilly, 2024) - For production patterns and best practices
 - **Hands-On Large Language Models: Language Understanding and Generation** by Jay Alammar and Maarten Grootendorst (O'Reilly, 2024) - For practical LLM applications
@@ -36,66 +26,66 @@ I shaped the scope and organization of modules was by studying the following boo
 
 The repository spans the entire stack of AI agent development:
 
-### Phase 1: Foundations
+### [Phase 1: Foundations](docs/phase-1-foundations/0.0-phase-1-foundations-index.md)
 
 Learn to work with the OpenAI API and structure your data:
 
-- **OpenAI API**: Basic calls, streaming, parameters, error handling
-- **Pydantic Models**: Data validation, nested models, serialization
-- **Structured Output**: Extract structured data using schemas instead of parsing text
-- **Conversations**: Multi-turn chat, context windows, memory management
-- **Embeddings**: Vector representations, similarity search, semantic retrieval
-- **Vector Databases**: ChromaDB basics, metadata filtering, CRUD operations
+- **[OpenAI API](docs/phase-1-foundations/1.1-openai-basics.md)**: Basic calls, streaming, parameters, error handling
+- **[Pydantic Models](docs/phase-1-foundations/1.2-pydantic-basics.md)**: Data validation, nested models, serialization
+- **[Structured Output](docs/phase-1-foundations/1.3-structured-output.md)**: Extract structured data using schemas instead of parsing text
+- **[Conversations](docs/phase-1-foundations/1.4-conversations.md)**: Multi-turn chat, context windows, memory management
+- **[Embeddings](docs/phase-1-foundations/1.5-embeddings.md)**: Vector representations, similarity search, semantic retrieval
+- **[Vector Databases](docs/phase-1-foundations/1.6-vector-search.md)**: ChromaDB basics, metadata filtering, CRUD operations
 
-### Phase 2: Core AI Engineering
+### [Phase 2: Core AI Engineering](docs/phase-2-building-ai-systems/0.0-phase-2-building-ai-systems-index.md)
 
 The patterns you'll use daily when building AI systems:
 
-- **Text Preparation**: Cleaning, tokenization, chunking strategies (fixed/semantic/recursive)
-- **Information Extraction**: NER, POS tagging, keyword extraction (TF-IDF, KeyBERT), regex patterns, fuzzy matching
-- **Classification & Routing**: Zero-shot, few-shot, intent detection, query routing, sentiment analysis
-- **RAG Pipeline**: Retrieval, context assembly, source citation, handling no results, metadata filtering
-- **Agent Orchestration**: Tool calling loops, sequential/parallel execution, error recovery
-- **Context Engineering**: Token counting, prompt assembly, context prioritization, compression
-- **Memory Patterns**: Conversation buffers, sliding windows, summary memory, entity tracking
-- **Prompt Engineering**: Chain-of-thought, few-shot examples, defensive prompting, self-consistency
-- **Evaluation**: Classification/retrieval/generation metrics, LLM-as-judge, A/B testing
+- **[Text Preparation](docs/phase-2-building-ai-systems/2.1-text-preparation.md)**: Cleaning, tokenization, chunking strategies (fixed/semantic/recursive)
+- **[Information Extraction](docs/phase-2-building-ai-systems/2.2-information-extraction.md)**: NER, POS tagging, keyword extraction (TF-IDF, KeyBERT), regex patterns, fuzzy matching
+- **[Classification & Routing](docs/phase-2-building-ai-systems/2.3-classification-routing.md)**: Zero-shot, few-shot, intent detection, query routing, sentiment analysis
+- **[RAG Pipeline](docs/phase-2-building-ai-systems/2.4-rag-pipeline.md)**: Retrieval, context assembly, source citation, handling no results, metadata filtering
+- **[Agent Orchestration](docs/phase-2-building-ai-systems/2.5-agent-orchestration.md)**: Tool calling loops, sequential/parallel execution, error recovery
+- **[Context Engineering](docs/phase-2-building-ai-systems/2.6-context-engineering.md)**: Token counting, prompt assembly, context prioritization, compression
+- **[Memory Patterns](docs/phase-2-building-ai-systems/2.7-memory-patterns.md)**: Conversation buffers, sliding windows, summary memory, entity tracking
+- **[Prompt Engineering](docs/phase-2-building-ai-systems/2.8-prompt-engineering.md)**: Chain-of-thought, few-shot examples, defensive prompting, self-consistency
+- **[Evaluation](docs/phase-2-building-ai-systems/2.9-evaluation-basics.md)**: Classification/retrieval/generation metrics, LLM-as-judge, A/B testing
 
-### Phase 3: Advanced Patterns 
+### [Phase 3: Advanced Patterns](docs/phase-3-advanced-patterns/0.0-phase-3-advanced-patterns-index.md)
 
 Sophisticated agent behaviors and production concerns:
 
-- **Advanced Agents** (7 scripts): ReAct, reflection, planning, self-correction, confidence routing, iterative refinement, tree-of-thought
-- **Multi-Agent Systems** (5 scripts): Agent handoff, specialized agents, coordinator patterns, preference detection, agent communication
-- **Advanced Memory** (5 scripts): Structured memory, importance scoring, memory consolidation, preference systems, episodic memory
-- **Advanced RAG** (6 scripts): Query rewriting, multi-hop retrieval, self-RAG, cross-encoder reranking, hybrid search, RAG fusion
-- **Iterative Processing** (5 scripts): Map-reduce, progressive summarization, refinement chains, hierarchical processing, batch processing
-- **FastAPI** (6 scripts): Building APIs for your agents (endpoints, async, streaming, chat, RAG APIs)
-- **Clustering & Topics** (6 scripts): K-means, UMAP visualization, BERTopic, LLM-based cluster labeling, topic coherence, interactive exploration
-- **Evaluation Systems** (6 scripts): Test datasets, evaluation pipelines, regression testing, prompt versioning, cost tracking, human eval design
-- **Document Processing** (4 scripts): PDF parsing with PyMuPDF/pypdf, structured extraction, full pipeline to chunks
+- **[Advanced Agents](docs/phase-3-advanced-patterns/3.1-advanced-agent-patterns.md)** (7 scripts): ReAct, reflection, planning, self-correction, confidence routing, iterative refinement, tree-of-thought
+- **[Multi-Agent Systems](docs/phase-3-advanced-patterns/3.2-multi-agent-systems.md)** (5 scripts): Agent handoff, specialized agents, coordinator patterns, preference detection, agent communication
+- **[Advanced Memory](docs/phase-3-advanced-patterns/3.3-advanced-memory.md)** (5 scripts): Structured memory, importance scoring, memory consolidation, preference systems, episodic memory
+- **[Advanced RAG](docs/phase-3-advanced-patterns/3.4-advanced-rag.md)** (6 scripts): Query rewriting, multi-hop retrieval, self-RAG, cross-encoder reranking, hybrid search, RAG fusion
+- **[Iterative Processing](docs/phase-3-advanced-patterns/3.5-iterative-processing.md)** (5 scripts): Map-reduce, progressive summarization, refinement chains, hierarchical processing, batch processing
+- **[FastAPI](docs/phase-3-advanced-patterns/3.6-fastapi-basics.md)** (6 scripts): Building APIs for your agents (endpoints, async, streaming, chat, RAG APIs)
+- **[Clustering & Topics](docs/phase-3-advanced-patterns/3.7-clustering-topics.md)** (6 scripts): K-means, UMAP visualization, BERTopic, LLM-based cluster labeling, topic coherence, interactive exploration
+- **[Evaluation Systems](docs/phase-3-advanced-patterns/3.8-evaluation-systems.md)** (6 scripts): Test datasets, evaluation pipelines, regression testing, prompt versioning, cost tracking, human eval design
+- **[Document Processing](docs/phase-3-advanced-patterns/3.9-document-processing.md)** (4 scripts): PDF parsing with PyMuPDF/pypdf, structured extraction, full pipeline to chunks
 
-### Phase 4: Production & Operations
+### [Phase 4: Production & Operations](docs/phase-4-production/0.0-phase-4-production-index.md)
 
 Taking agents to production:
 
-- **Docker & Containerization** (5 files): Dockerfiles, docker-compose, environment configuration, multi-service orchestration
-- **PostgreSQL + pgvector** (6 scripts): SQLAlchemy ORM, CRUD operations, Alembic migrations, pgvector setup, vector search, hybrid search
-- **Observability** (5 scripts): Langfuse setup, tracing LLM calls, RAG pipeline tracing, cost monitoring, custom metrics
-- **Guardrails** (8 scripts): Input validation, prompt injection defense, jailbreak defense, PII filtering, output validation, content moderation, architecture, model gateway
-- **Async & Background Jobs** (5 scripts): Asyncio basics, concurrent LLM calls, Celery setup, background tasks, task status tracking
-- **MCP Servers** (4 scripts): MCP overview, client connection, tool usage, custom server creation
-- **Cloud Deployment** (4 files): VM setup guide, HTTPS configuration, health checks, logging configuration
-- **CI/CD Basics** (3 files): GitHub Actions workflows for testing, automation, deployment
+- **[Docker & Containerization](docs/phase-4-production/4.1-docker.md)** (5 files): Dockerfiles, docker-compose, environment configuration, multi-service orchestration
+- **[PostgreSQL + pgvector](docs/phase-4-production/4.2-postgresql-pgvector.md)** (6 scripts): SQLAlchemy ORM, CRUD operations, Alembic migrations, pgvector setup, vector search, hybrid search
+- **[Observability](docs/phase-4-production/4.3-observability.md)** (5 scripts): Langfuse setup, tracing LLM calls, RAG pipeline tracing, cost monitoring, custom metrics
+- **[Guardrails](docs/phase-4-production/4.4-guardrails.md)** (8 scripts): Input validation, prompt injection defense, jailbreak defense, PII filtering, output validation, content moderation, architecture, model gateway
+- **[Async & Background Jobs](docs/phase-4-production/4.5-async-background-jobs.md)** (5 scripts): Asyncio basics, concurrent LLM calls, Celery setup, background tasks, task status tracking
+- **[MCP Servers](docs/phase-4-production/4.6-mcp-servers.md)** (4 scripts): MCP overview, client connection, tool usage, custom server creation
+- **[Cloud Deployment](docs/phase-4-production/4.7-cloud-deployment.md)** (4 files): VM setup guide, HTTPS configuration, health checks, logging configuration
+- **[CI/CD Basics](docs/phase-4-production/4.8-cicd.md)** (3 files): GitHub Actions workflows for testing, automation, deployment
 
-### Phase 5: Specialization (17 scripts)
+### [Phase 5: Specialization](docs/phase-5-specialization/0.0-phase-5-specialization-index.md)
 
 Advanced topics for specific use cases:
 
-- **Fine-tuning LLMs** (6 scripts): Decision framework, data preparation, LoRA/QLoRA, quantization, SFT/RLHF/DPO overview, evaluation
-- **Custom Embeddings** (4 scripts): sentence-transformers, domain adaptation with TSDAE, embedding evaluation, bias awareness
-- **Advanced NLP** (3 scripts): Dependency parsing, relation extraction, coreference resolution
-- **Multimodal** (4 scripts): GPT-4V vision basics, CLIP text-image similarity, multimodal search, document vision
+- **[Fine-tuning LLMs](docs/phase-5-specialization/5.1-fine-tuning.md)** (6 scripts): Decision framework, data preparation, LoRA/QLoRA, quantization, SFT/RLHF/DPO overview, evaluation
+- **[Custom Embeddings](docs/phase-5-specialization/5.2-custom-embeddings.md)** (4 scripts): sentence-transformers, domain adaptation with TSDAE, embedding evaluation, bias awareness
+- **[Advanced NLP](docs/phase-5-specialization/5.3-advanced-nlp.md)** (3 scripts): Dependency parsing, relation extraction, coreference resolution
+- **[Multimodal](docs/phase-5-specialization/5.4-multimodal.md)** (4 scripts): GPT-4V vision basics, CLIP text-image similarity, multimodal search, document vision
 
 ## Getting Started
 
