@@ -110,4 +110,4 @@ Once you understand the patterns, frameworks become tools you can use (or not) a
 
 ## Next Steps
 
-Ready to start? Head to [Phase 1: Foundations](./phase-1-foundations/index.md) to learn the basics.
+Ready to start? Head to [Phase 1: Foundations](./phase-1-foundations/0.0-phase-1-foundations-index.md) to learn the basics.

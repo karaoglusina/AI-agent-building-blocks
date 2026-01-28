@@ -35,11 +35,11 @@ Use this as a reference. When you need to implement RAG with citations, there's 
 
 | Phase | What It Covers |
 |-------|----------------|
-| [Phase 1: Foundations](./phase-1-foundations/index.md) | OpenAI API, Pydantic, embeddings, vector search |
-| [Phase 2: Building AI Systems](./phase-2-building-ai-systems/index.md) | Text prep, RAG, agents, memory, prompting, evaluation |
-| [Phase 3: Advanced Patterns](./phase-3-advanced-patterns/index.md) | ReAct, multi-agent, advanced RAG, FastAPI, clustering |
-| [Phase 4: Production](./phase-4-production/index.md) | Docker, PostgreSQL, observability, guardrails, deployment |
-| [Phase 5: Specialization](./phase-5-specialization/index.md) | Fine-tuning, custom embeddings, multimodal |
+| [Phase 1: Foundations](./phase-1-foundations/0.0-phase-1-foundations-index.md) | OpenAI API, Pydantic, embeddings, vector search |
+| [Phase 2: Building AI Systems](./phase-2-building-ai-systems/0.0-phase-2-building-ai-systems-index.md) | Text prep, RAG, agents, memory, prompting, evaluation |
+| [Phase 3: Advanced Patterns](./phase-3-advanced-patterns/0.0-phase-3-advanced-patterns-index.md) | ReAct, multi-agent, advanced RAG, FastAPI, clustering |
+| [Phase 4: Production](./phase-4-production/0.0-phase-4-production-index.md) | Docker, PostgreSQL, observability, guardrails, deployment |
+| [Phase 5: Specialization](./phase-5-specialization/0.0-phase-5-specialization-index.md) | Fine-tuning, custom embeddings, multimodal |
 
 ## The Philosophy
 
