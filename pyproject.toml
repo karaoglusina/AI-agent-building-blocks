@@ -1,17 +1,152 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "sina-agent-testing"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI Agent Building Blocks - A comprehensive Python reference for learning and building AI agents"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "chromadb>=0.4.0",
-    "httpx>=0.28.1",
-    "ipykernel>=7.1.0",
-    "langchain>=1.2.0",
-    "numpy>=1.24.0",
-    "openai>=1.0.0",
+    # Minimal dependencies needed for utils package
     "pydantic>=2.0.0",
     "python-dotenv>=1.2.1",
-    "rich>=14.2.0",
 ]
+
+[dependency-groups]
+# Phase 1: Foundations - OpenAI API, Pydantic, Vector Search
+phase-1 = [
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "chromadb>=0.4.0",
+    "numpy>=1.24.0",
+    "python-dotenv>=1.2.1",
+]
+
+# Phase 2: Core AI Engineering - NLP, Text Processing, RAG
+phase-2 = [
+    # Phase 1 dependencies
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "chromadb>=0.4.0",
+    "numpy>=1.24.0",
+    # NLP & Text Processing
+    "spacy>=3.7.0",
+    "nltk>=3.8.0",
+    "keybert>=0.8.0",
+    "tiktoken>=0.5.0",
+    "rapidfuzz>=3.0.0",
+    # ML & Embeddings
+    "sentence-transformers>=2.2.0",
+    "scikit-learn>=1.3.0",
+    # Utilities
+    "python-dotenv>=1.2.1",
+    "pip>=24.0",
+]
+
+# Phase 3: Advanced Patterns - FastAPI, Advanced RAG, Clustering
+phase-3 = [
+    # Phase 1 dependencies
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "chromadb>=0.4.0",
+    "numpy>=1.24.0",
+    # Phase 2 dependencies (NLP & Text Processing)
+    "spacy>=3.7.0",
+    "nltk>=3.8.0",
+    "keybert>=0.8.0",
+    "tiktoken>=0.5.0",
+    "rapidfuzz>=3.0.0",
+    "sentence-transformers>=2.2.0",
+    "scikit-learn>=1.3.0",
+    # Web Framework
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    # Advanced ML
+    "bertopic>=0.17.0",
+    "transformers>=4.35.0",
+    "faiss-cpu>=1.7.0",
+    # Document Processing
+    "pypdf>=3.0.0",
+    # Utilities
+    "python-dotenv>=1.2.1",
+    "pip>=24.0",
+]
+
+# Phase 4: Production & Operations - PostgreSQL, Docker, Observability
+phase-4 = [
+    # Phase 1 dependencies
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "chromadb>=0.4.0",
+    "numpy>=1.24.0",
+    # Phase 2 dependencies (NLP & Text Processing)
+    "spacy>=3.7.0",
+    "nltk>=3.8.0",
+    "keybert>=0.8.0",
+    "tiktoken>=0.5.0",
+    "rapidfuzz>=3.0.0",
+    "sentence-transformers>=2.2.0",
+    "scikit-learn>=1.3.0",
+    # Phase 3 dependencies (Web Framework & Advanced ML)
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "bertopic>=0.17.0",
+    "transformers>=4.35.0",
+    "faiss-cpu>=1.7.0",
+    "pypdf>=3.0.0",
+    # Database & ORM
+    "sqlalchemy>=2.0.0",
+    "pgvector>=0.2.0",
+    "psycopg2-binary>=2.9.0",
+    # Background Jobs
+    "celery>=5.3.0",
+    # Observability
+    "langfuse>=2.0.0",
+    # HTTP Client
+    "httpx>=0.28.1",
+    # Utilities
+    "python-dotenv>=1.2.1",
+    "pip>=24.0",
+]
+
+# Phase 5: Specialization - Fine-tuning, Custom Embeddings, Multimodal
+phase-5 = [
+    # Phase 1 dependencies
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "chromadb>=0.4.0",
+    "numpy>=1.24.0",
+    # ML & Deep Learning
+    "transformers>=4.35.0",
+    "peft>=0.7.0",
+    "torch>=2.0.0",
+    "sentence-transformers>=2.2.0",
+    "scikit-learn>=1.3.0",
+    # Vision & Multimodal
+    "pillow>=10.0.0",
+    # Utilities
+    "python-dotenv>=1.2.1",
+    "ftfy>=6.1.0",
+    "numba>=0.59.0",
+    "pip>=24.0",
+]
+
+# Development dependencies (optional, for notebooks, etc.)
+dev = [
+    "ipykernel>=7.1.0",
+    "langchain>=1.2.0",
+    "rich>=14.2.0",
+    "instructor>=1.0.0",
+    "setfit>=1.0.0",
+    "umap-learn>=0.5.0",
+    "pymupdf>=1.23.0",
+    "pip>=24.0",
+]
+
+[tool.setuptools]
+packages = ["utils"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.md"]

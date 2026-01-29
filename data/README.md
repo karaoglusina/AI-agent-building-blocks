@@ -2,7 +2,7 @@
 
 ## Dataset Overview
 
-The curriculum uses a dataset of **~10,342 job postings** for practical examples. The dataset (`job_post_data.json`) is approximately 106 MB and contains LinkedIn job postings with the following fields:
+The curriculum uses a dataset of **~10,342 job postings** for practical examples. The dataset (`sample_job_data.json`) is approximately 106 MB and contains LinkedIn job postings with the following fields:
 
 - `id`: Unique job identifier
 - `title`: Job title
@@ -16,7 +16,7 @@ The curriculum uses a dataset of **~10,342 job postings** for practical examples
 
 ### Option 1: Use Your Own Data
 
-The scripts work with any job posting dataset in JSON format. Create `job_post_data.json` in this directory with the following structure:
+The scripts work with any job posting dataset in JSON format. Create `sample_job_data.json` in this directory with the following structure:
 
 ```json
 [
@@ -39,9 +39,9 @@ The scripts work with any job posting dataset in JSON format. Create `job_post_d
 
 A sample dataset (`job_post_data_sample.json`) is included in the repository with 3 example job postings. You can:
 
-1. **Use the sample file directly** - Copy it to `job_post_data.json`:
+1. **Use the sample file directly** - Copy it to `sample_job_data.json`:
    ```bash
-   cp data/job_post_data_sample.json data/job_post_data.json
+   cp data/job_post_data_sample.json data/sample_job_data.json
    ```
 
 2. **Create your own sample** - For testing, you can create a small dataset:
@@ -59,7 +59,7 @@ A sample dataset (`job_post_data_sample.json`) is included in the repository wit
        }
        for i in range(10)
    ]
-   with open('data/job_post_data.json', 'w') as f:
+   with open('data/sample_job_data.json', 'w') as f:
        json.dump(sample_jobs, f, indent=2)
    "
    ```

@@ -1,0 +1,55 @@
+{
+  "rubric": {
+    "criteria": [
+      {
+        "name": "Accuracy",
+        "description": "Is the classification correct?"
+      },
+      {
+        "name": "Confidence",
+        "description": "How confident are you in your judgment?"
+      }
+    ],
+    "scale": {
+      "A is much better": 2,
+      "A is slightly better": 1,
+      "Both equal": 0,
+      "B is slightly better": -1,
+      "B is much better": -2
+    },
+    "instructions": "For each task:\n1. Read the input carefully\n2. Evaluate both outputs\n3. Choose which is better based on accuracy\n4. Rate your confidence: Low, Medium, High"
+  },
+  "tasks": [
+    {
+      "task_id": "task_1",
+      "input": "Senior Python Developer",
+      "output_a": "Engineering",
+      "output_b": "Engineering",
+      "metadata": {
+        "index": 0
+      }
+    },
+    {
+      "task_id": "task_2",
+      "input": "UX Designer",
+      "output_a": "Design",
+      "output_b": "Other",
+      "metadata": {
+        "index": 2
+      }
+    },
+    {
+      "task_id": "task_3",
+      "input": "Product Manager",
+      "output_a": "Product",
+      "output_b": "Product",
+      "metadata": {
+        "index": 1
+      }
+    }
+  ],
+  "meta": {
+    "total_tasks": 3,
+    "status": "pending"
+  }
+}

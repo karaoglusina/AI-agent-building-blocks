@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 # Path to data file (relative to project root)
-DATA_PATH = Path(__file__).parent.parent / "data" / "job_post_data.json"
+DATA_PATH = Path(__file__).parent.parent / "data" / "sample_job_data.json"
 
 
 def load_jobs() -> list[dict]:

@@ -1,0 +1,242 @@
+[
+  {
+    "input": "Artificial Intelligence Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4286667286",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Data and AI consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4271705275",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "AI Consultant - Marketing",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4288400764",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "AI Solutions Consultant - Platinion",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4265358349",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "AI Technical Consulting Specialist \u2013 ServiceNow",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4277535142",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Data & AI Consultant - Supply Chain AI Product Specialist",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4289657704",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Growth Consultant (Data & AI)",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4262419392",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Responsible AI Lead Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4289653870",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Growth Consultant (Data & AI)",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4262421117",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Data & AI Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4265416440",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Solution Consultant - Hiredscore - EMEA",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4268550577",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Principal/Managing AI & Data Consultant - Financial Services",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4191925184",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Responsible AI Lead Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4289653869",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Cloud Strategy Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4289904359",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Delivery Consultant - Machine Learning (GenAI), ProServe SDT North",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4200157486",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Recruitment Consultant",
+    "expected_output": "Design",
+    "metadata": {
+      "job_id": "4288536945",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Consultant Data & AI",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4291629680",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Data & AI Consultant - Supply Chain AI Product Specialist",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4289652858",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Digital Strategy Consultant, Netherlands (Technology and Digital Advantage)",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4209331418",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Junior Sustainability Strategy Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4288970111",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Sr. Solutions Consultant, DevOps",
+    "expected_output": "Engineering",
+    "metadata": {
+      "job_id": "4261169160",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Data and AI Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4265450914",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Modern Cloud Foundation Consultant",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4282472488",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Conversion Consultant (fluent in Dutch required)",
+    "expected_output": "Design",
+    "metadata": {
+      "job_id": "4275612131",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Artificial Intelligence Engineer",
+    "expected_output": "Engineering",
+    "metadata": {
+      "job_id": "4280778645",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "SAP S/4HANA Consultant - Netherlands",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4268218425",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "AI Engineer - Sr Consultant level - Based in Netherlands",
+    "expected_output": "Engineering",
+    "metadata": {
+      "job_id": "4202020293",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Senior Researcher - Machine Learning - Microsoft Research",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4275642969",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "Staff Machine Learning Scientist",
+    "expected_output": "Other",
+    "metadata": {
+      "job_id": "4242890667",
+      "company": "Unknown"
+    }
+  },
+  {
+    "input": "LLM Engineering Consultant",
+    "expected_output": "Engineering",
+    "metadata": {
+      "job_id": "4226467950",
+      "company": "Unknown"
+    }
+  }
+]
