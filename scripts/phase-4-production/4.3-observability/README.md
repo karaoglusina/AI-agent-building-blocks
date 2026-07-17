@@ -4,6 +4,10 @@
 
 This module covers observability for AI systems using Langfuse, enabling tracing, cost monitoring, and custom metrics for production LLM applications.
 
+> **Known issue — Langfuse v2 only.** These scripts import `langfuse.decorators`, which Langfuse v3 removed (it moved `observe` to the top-level package and replaced `langfuse_context`). The `phase-4` dependency group therefore pins `langfuse<3.0.0`. The concepts carry over, but the imports here won't run against v3 — check the current Langfuse docs before copying this into a real project.
+
+> **Scope — this module is instrumentation, not diagnosis.** It shows you how to emit traces, spans, costs, and custom metrics. It does not teach you how to work out *why* a given LLM call produced a bad answer: there's no trace replay, no diffing retrieved context against what you expected, and the quality check in `03_trace_rag_pipeline.py` is keyword matching, which tells you a score moved but not what caused it. Collecting the telemetry is the easy half; that gap is real and worth knowing about before you rely on this.
+
 ## Files
 
 | File | Topic | Key Concept |
