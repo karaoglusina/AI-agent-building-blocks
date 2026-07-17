@@ -8,10 +8,10 @@ Key concept: Vision models (GPT-4V, Claude) can understand images alongside text
 Book reference: hands_on_LLM.II.9
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 
 def vision_api_intro():

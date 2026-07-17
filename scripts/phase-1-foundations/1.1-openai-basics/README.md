@@ -1,7 +1,7 @@
 # Lesson 01: OpenAI API Basics
 
 ## Overview
-These scripts introduce the fundamental concepts of the OpenAI Responses API.
+These scripts introduce the fundamental concepts of the OpenAI Chat Completions API.
 
 ## Scripts
 
@@ -18,7 +18,7 @@ These scripts introduce the fundamental concepts of the OpenAI Responses API.
 
 ## Key Takeaways
 
-1. **`client.responses.create()`** is the main method
+1. **`client.chat.completions.create()`** is the main method
 2. **Input** can be a string or list of messages
 3. **System prompts** shape AI behavior
 4. **Temperature** controls creativity (0=focused, 2=random)

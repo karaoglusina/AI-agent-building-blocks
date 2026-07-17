@@ -8,10 +8,10 @@ Key concept: Jailbreaking tries to bypass safety guidelines - recognizing manipu
 Book reference: AI_eng.5
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 import re
 from typing import Tuple, List, Dict

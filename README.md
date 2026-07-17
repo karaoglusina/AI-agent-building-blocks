@@ -1,12 +1,16 @@
 # AI Agent Building Blocks
 
-A comprehensive Python reference for learning and building AI agents from scratch. This repository covers the full stack of AI agent development, from API basics to production systems. 
+[![Scripts](https://github.com/karaoglusina/AI-agent-building-blocks/actions/workflows/scripts.yml/badge.svg)](https://github.com/karaoglusina/AI-agent-building-blocks/actions/workflows/scripts.yml)
+
+A Python reference for learning and building AI agents from scratch — 208 short scripts covering the stack from API basics to production patterns.
+
+> **Status:** these are my study notes from moving out of academic AI research into AI engineering, published because they might be useful to someone on the same path. They're maintained on a best-effort basis, not actively developed. Corrections and issues are welcome; I may be slow to respond.
 
 ## Why This Exists
 
 Building AI agents requires understanding dozens of interconnected components. Without a map of the landscape, you learn reactively — discovering critical patterns only after committing to an architecture.
 
-This repo provides a **complete map of the AI agent landscape**. Build a mental repertoire upfront so when you design real solutions, you'll recognize which patterns apply and what's in your toolchain.
+This repo is a **map of the AI agent landscape** — broad rather than deep, by design. Build a mental repertoire upfront so when you design real solutions, you'll recognize which patterns apply and what's in your toolchain. See [Scope & Limitations](#scope--limitations) for where the map stops.
 
 Each script isolates one specific concept so you can:
 
@@ -31,13 +35,30 @@ Each script isolates one specific concept so you can:
 Install dependencies:
 
 ```bash
-git clone https://github.com/karaoglusina/agent-building-blocks.git
-cd agent-building-blocks
-uv sync --all-groups # or install only for specific phases by changing this flag to '--only-group phase-1', '--only-group phase-2' etc.
+git clone https://github.com/karaoglusina/AI-agent-building-blocks.git
+cd AI-agent-building-blocks
+uv sync --group phase-1  # or --all-groups for everything (several GB: torch, transformers, faiss, bertopic)
 source .venv/bin/activate
-python utils/setup_models.py  # Download spaCy and NLTK models/data
 ```
 
+That's enough for Phase 1. From Phase 2 onwards you also need the spaCy and NLTK data:
+
+```bash
+uv sync --group phase-2       # phase-2 … phase-5, or --all-groups
+python utils/setup_models.py  # downloads the spaCy model + NLTK corpora
+```
+
+### Run without an API key
+
+Most scripts have a `TEST_MODE` that skips the network call and prints what the script *would* do, so you can read and run them before deciding to spend anything:
+
+```bash
+TEST_MODE=1 python "scripts/phase-1-foundations/1.1-openai-basics/01_basic_call.py"
+```
+
+`TEST_MODE=1` skips API calls, not imports — you still need the dependencies for that phase installed, but you don't need a key.
+
+### Run for real
 
 ```bash
 # Create .env file
@@ -50,19 +71,30 @@ Or manually create `.env` and add:
 OPENAI_API_KEY=sk-your-actual-api-key-here
 ```
 
-Run a script:
+Then:
 
 ```bash
 python "scripts/phase-1-foundations/1.1-openai-basics/01_basic_call.py"
 ```
 
-You are ready to explore, check out `modules/` for conceptual walkthroughs and design explanations, structured by phases and modules. You'll find links to related scripts. 
+You are ready to explore, check out `modules/` for conceptual walkthroughs and design explanations, structured by phases and modules. You'll find links to related scripts.
+
+### Check everything runs
+
+```bash
+python tests/test_all_scripts.py --filter phase-1   # one phase
+python tests/test_all_scripts.py                    # all 208, needs --all-groups installed
+```
+
+This is a smoke test: it runs each script under `TEST_MODE=1` and reports what executed, not whether the output is right.
 
 ## Repository Structure
 
 ```
-agent-building-blocks/
+AI-agent-building-blocks/
 ├── modules/                         # Conceptual walkthroughs (docs) - each document links to relevant scripts - Start here!
+│   ├── index.md
+│   ├── overview.md                  # The landscape, if you want the map before the code
 │   ├── phase-1-foundations/
 │   │   ├── 0.0-phase-1-foundations-index.md
 │   │   └── 1.1-openai-basics.md
@@ -73,7 +105,10 @@ agent-building-blocks/
 │   │   └── 1.1-openai-basics/01_basic_call.py
 │   │   └── ...
 │   └── ...
-└── data/                            # Sample datasets
+├── utils/                           # Shared helpers (data loading, env, Phase 4 DB models)
+├── tests/
+│   └── test_all_scripts.py          # Runs every script under TEST_MODE=1
+└── data/                            # Sample dataset
     └── sample_job_data.json
 ```
 
@@ -87,7 +122,19 @@ Throughout the docs, a single running agent example is used: **AI job market ana
 - Autonomously researches and synthesizes insights
 - Remembers your preferences across sessions
 
-The dataset (`data/sample_job_data.json`) contains real LinkedIn postings — messy, diverse, and realistic.
+The dataset (`data/sample_job_data.json`) contains 1,318 real LinkedIn postings (14 MB) — messy, diverse, and realistic. It's committed directly to the repo, so a plain `git clone` gets it; no Git LFS or download step needed.
+
+## Scope & Limitations
+
+What this is: a map of the components, so you know what exists and roughly what it's for before you commit to an architecture. What it isn't, and where it stops:
+
+- **It maps production; it doesn't teach deployment.** Phase 2 builds a RAG pipeline over the job dataset. Phase 4 shows PostgreSQL, Docker and observability — but as separate demos, not as your Phase 2 pipeline being taken to production. The failure modes that actually bite on deploy (connection pooling, cold starts, reindexing, retries, tail latency) aren't covered.
+- **The vector store choice is made for you, and there's no migration path.** Phases 1-3 use ChromaDB; Phase 4 uses pgvector. There's no shared retrieval interface and no export/import between them, so moving from one to the other means rebuilding rather than swapping an adapter.
+- **Observability here is instrumentation, not debugging.** Module 4.3 shows you how to emit traces, costs and metrics. It doesn't teach you how to work out *why* a call produced a bad answer — no trace replay, no diffing retrieved context against expectation.
+- **Evaluation is split awkwardly.** Module 2.9, where you meet evaluation first, computes metrics over hardcoded arrays. The part that actually matters — building eval datasets, rubrics, inter-annotator agreement — is in 3.8. If you only read 2.9 you'd reasonably conclude the repo assumes you already have a dataset.
+- **Written by someone moving from research into engineering, not from production experience.** The reading is real and cross-referenced against the books below; the scars aren't.
+
+If any of these are what you came for, this repo will point you at the right vocabulary and then leave you to it.
 
 ## Tech Stack
 

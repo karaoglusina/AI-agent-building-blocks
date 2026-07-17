@@ -8,10 +8,10 @@ Key concept: Content moderation uses both rule-based filters and LLM-based class
 Book reference: AI_eng.10.2
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 from openai import OpenAI
 import os

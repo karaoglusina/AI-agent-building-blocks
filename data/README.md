@@ -2,7 +2,7 @@
 
 ## Dataset Overview
 
-The curriculum uses a dataset of **~10,342 job postings** for practical examples. The dataset (`sample_job_data.json`) is approximately 106 MB and contains LinkedIn job postings with the following fields:
+The curriculum uses a dataset of **1,318 job postings** for practical examples. The dataset (`sample_job_data.json`) is about 14 MB and ships in this repo — a plain `git clone` gets it, with no Git LFS or download step. It contains LinkedIn job postings with the following fields:
 
 - `id`: Unique job identifier
 - `title`: Job title
@@ -14,9 +14,13 @@ The curriculum uses a dataset of **~10,342 job postings** for practical examples
 
 ## Setup Options
 
-### Option 1: Use Your Own Data
+### Option 1: Use the included data (default — nothing to do)
 
-The scripts work with any job posting dataset in JSON format. Create `sample_job_data.json` in this directory with the following structure:
+`sample_job_data.json` is already here after cloning. The scripts load it automatically via `utils/data_loader.py`. Skip to "Data Loading" below.
+
+### Option 2: Use Your Own Data
+
+The scripts work with any job posting dataset in JSON format. Replace `sample_job_data.json` in this directory with the following structure:
 
 ```json
 [
@@ -35,16 +39,10 @@ The scripts work with any job posting dataset in JSON format. Create `sample_job
 
 **Minimum required fields:** `id`, `title`, `description`, `companyName`, `location`
 
-### Option 2: Use Sample Data
+### Option 3: Generate a tiny synthetic set
 
-A sample dataset (`job_post_data_sample.json`) is included in the repository with 3 example job postings. You can:
+If you want something smaller than the included 1,318 postings for a quick test:
 
-1. **Use the sample file directly** - Copy it to `sample_job_data.json`:
-   ```bash
-   cp data/job_post_data_sample.json data/sample_job_data.json
-   ```
-
-2. **Create your own sample** - For testing, you can create a small dataset:
    ```bash
    python -c "
    import json
@@ -64,7 +62,7 @@ A sample dataset (`job_post_data_sample.json`) is included in the repository wit
    "
    ```
 
-### Option 3: Scrape Your Own Dataset
+### Option 4: Scrape Your Own Dataset
 
 If you want to build your own dataset, consider scraping from:
 - LinkedIn Jobs API (requires authentication)
@@ -100,7 +98,7 @@ python -c "from utils.data_loader import load_sample_jobs; jobs = load_sample_jo
 
 ## Privacy & Legal
 
+- The included `sample_job_data.json` is a 1,318-posting excerpt of a larger scrape, committed to this repo. The full ~10k dataset is not published.
 - **Do not commit real job data** with personally identifiable information
-- The original dataset is excluded from git via `.gitignore`
 - If sharing your own data, ensure you have the right to do so
 - Anonymize or use synthetic data for public repositories

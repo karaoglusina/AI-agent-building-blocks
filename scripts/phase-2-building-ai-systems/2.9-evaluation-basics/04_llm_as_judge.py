@@ -58,7 +58,7 @@ def evaluate_quality(question: str, response: str) -> QualityScore:
     ]
     ,
     response_format={"type": "json_object"})
-    return result.output_parsed
+    return QualityScore.model_validate_json(result.choices[0].message.content)
 
 
 def pairwise_comparison(question: str, response_a: str, response_b: str) -> PairwiseJudgment:
@@ -77,7 +77,7 @@ def pairwise_comparison(question: str, response_a: str, response_b: str) -> Pair
     ]
     ,
     response_format={"type": "json_object"})
-    return result.output_parsed
+    return PairwiseJudgment.model_validate_json(result.choices[0].message.content)
 
 
 # Test cases

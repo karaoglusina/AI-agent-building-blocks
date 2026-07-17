@@ -8,14 +8,15 @@ Key concept: Every API call costs money - track usage, identify waste, optimize 
 Book reference: AI_eng.4, AI_eng.9
 """
 
+import sys
+sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
 import utils._load_env  # Loads .env file automatically
 
 import tiktoken
 from openai import OpenAI
 import os
 from typing import Any
-import sys
-sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
 
 
 # Skip actual API call in test mode

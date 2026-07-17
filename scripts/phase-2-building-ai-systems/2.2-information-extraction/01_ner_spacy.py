@@ -24,9 +24,10 @@ if os.getenv('TEST_MODE') == '1' and MISSING_DEPENDENCIES:
     print(f'✓ Test mode: Skipping due to missing dependencies: {MISSING_DEPENDENCIES}')
     exit(0)
 
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from utils.data_loader import load_sample_jobs
-from pathlib import Path
 
 # Load spaCy model with NER
 nlp = spacy.load("en_core_web_sm")

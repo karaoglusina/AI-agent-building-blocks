@@ -38,7 +38,7 @@ if os.getenv('TEST_MODE') == '1' and MISSING_DEPENDENCIES:
 
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
 
-from modules.phase4.__init__ import DATABASE_URL
+from utils.phase4_db import DATABASE_URL
 
 
 class Base(DeclarativeBase):
@@ -170,6 +170,14 @@ if __name__ == "__main__":
     print("  docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres \\")
     print("    ankane/pgvector")
     print()
+
+    # This module needs a live PostgreSQL. TEST_MODE validates the imports and
+    # structure above, then stops before connecting.
+    if os.getenv("TEST_MODE") == "1":
+        print("✓ Test mode: Script structure validated")
+        print("✓ Would run: CREATE EXTENSION vector, then create the vector tables")
+        print("✓ pgvector setup pattern: PASSED")
+        exit(0)
 
     # Enable extension
     print("\n1. ENABLE PGVECTOR EXTENSION")

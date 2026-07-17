@@ -4,7 +4,7 @@ This isn't a formal course. It's a collection of notes I put together while lear
 
 ## What's Here
 
-About 170 Python scripts organized into phases, each demonstrating one concept. The scripts are short (40-80 lines), self-contained, and runnable. No magic, no opaque frameworks - just Python code you can read and understand.
+208 Python scripts organized into phases, each demonstrating one concept. The scripts are short (40-80 lines), self-contained, and runnable. No magic, no opaque frameworks - just Python code you can read and understand.
 
 ## The Unifying Example
 
@@ -18,7 +18,7 @@ Why this example? Because it touches on almost everything:
 - **Agents**: Autonomously research, compare, and synthesize insights
 - **Memory**: Remember what the user is looking for
 
-The dataset (`data/sample_job_data.json`) contains ~10,000 real job postings. It's messy, diverse, and large enough to hit real-world issues.
+The dataset (`data/sample_job_data.json`) contains 1,318 real job postings. It's messy, diverse, and large enough to hit real-world issues.
 
 ## How to Use This
 

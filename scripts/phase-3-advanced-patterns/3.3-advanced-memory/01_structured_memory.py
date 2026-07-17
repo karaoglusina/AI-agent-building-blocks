@@ -8,10 +8,12 @@ Key concept: Use Pydantic models to enforce memory structure and validation.
 Book reference: AI_eng.6
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+import utils._load_env  # Loads .env file automatically
 
 from openai import OpenAI
 import os
