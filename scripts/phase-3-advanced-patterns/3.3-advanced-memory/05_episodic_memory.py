@@ -11,16 +11,18 @@ Book reference: AI_eng.6
 # Optional dependencies - graceful handling in TEST_MODE
 MISSING_DEPENDENCIES = []
 
-import utils._load_env  # Loads .env file automatically
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+import utils._load_env  # Loads .env file automatically
 
 # Skip if dependencies missing in TEST_MODE
 import os
 if os.getenv('TEST_MODE') == '1' and MISSING_DEPENDENCIES:
     print(f'✓ Test mode: Skipping due to missing dependencies: {MISSING_DEPENDENCIES}')
     exit(0)
-
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from openai import OpenAI
 import os

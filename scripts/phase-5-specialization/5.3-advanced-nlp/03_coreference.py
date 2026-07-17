@@ -8,10 +8,10 @@ Key concept: Coreference resolution identifies when different expressions refer 
 Book reference: speach_lang.III.23
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 
 def coreference_intro():

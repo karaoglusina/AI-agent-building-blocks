@@ -24,10 +24,9 @@ except ImportError:
     MISSING_DEPENDENCIES.append('uvicorn')
 
 import sys
-    import os
+import os
 
 # Skip if dependencies missing in TEST_MODE
-import os
 if os.getenv('TEST_MODE') == '1' and MISSING_DEPENDENCIES:
     print(f'✓ Test mode: Skipping due to missing dependencies: {MISSING_DEPENDENCIES}')
     exit(0)

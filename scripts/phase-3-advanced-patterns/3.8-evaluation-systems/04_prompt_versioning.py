@@ -8,6 +8,9 @@ Key concept: Prompts are code - version them, A/B test them, measure their perfo
 Book reference: AI_eng.5
 """
 
+import sys
+sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
 import utils._load_env  # Loads .env file automatically
 
 import json
@@ -15,8 +18,6 @@ from datetime import datetime
 from typing import Any
 from openai import OpenAI
 import os
-import sys
-sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
 
 
 # Skip actual API call in test mode

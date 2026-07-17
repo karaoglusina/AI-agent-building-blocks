@@ -8,13 +8,14 @@ Key concept: Never hardcode secrets - use environment variables for configuratio
 Book reference: AI_eng.10
 """
 
+import sys
+sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
 import utils._load_env  # Loads .env file automatically
 
 import os
 from pydantic_settings import BaseSettings
 from typing import Optional
-import sys
-sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
 
 
 class Settings(BaseSettings):

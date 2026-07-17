@@ -8,10 +8,10 @@ Key concept: Relation extraction identifies semantic relationships between entit
 Book reference: speach_lang.III.20
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 
 def relation_extraction_intro():

@@ -33,9 +33,10 @@ nltk.download("stopwords", quiet=True)
 from nltk.corpus import stopwords
 
 import sys
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from utils.data_loader import load_sample_jobs
-from pathlib import Path
 
 # Load resources
 nlp = spacy.load("en_core_web_sm")

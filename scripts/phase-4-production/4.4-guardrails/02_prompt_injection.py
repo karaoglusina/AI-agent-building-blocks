@@ -8,10 +8,10 @@ Key concept: Prompt injection attacks try to override system instructions - dete
 Book reference: AI_eng.5 (Defensive)
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 import re
 from typing import Tuple, List

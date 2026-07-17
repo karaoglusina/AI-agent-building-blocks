@@ -11,9 +11,10 @@ Book reference: NLP_cook.5, speach_lang.I.2.8
 from rapidfuzz import fuzz, process
 
 import sys
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from utils.data_loader import load_sample_jobs
-from pathlib import Path
 
 
 # Standard skill names for normalization

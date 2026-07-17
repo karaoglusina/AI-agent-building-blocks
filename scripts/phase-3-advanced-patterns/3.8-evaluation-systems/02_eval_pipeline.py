@@ -8,6 +8,9 @@ Key concept: Automated pipelines ensure every code change is evaluated - catch r
 Book reference: AI_eng.4
 """
 
+import sys
+sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
 import utils._load_env  # Loads .env file automatically
 
 import json
@@ -15,8 +18,6 @@ from typing import Callable, Any
 from pydantic import BaseModel
 from openai import OpenAI
 import os
-import sys
-sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
 
 
 # Skip actual API call in test mode

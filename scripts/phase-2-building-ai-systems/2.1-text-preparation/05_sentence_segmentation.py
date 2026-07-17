@@ -34,9 +34,10 @@ nltk.download("punkt", quiet=True)
 nltk.download("punkt_tab", quiet=True)
 
 import sys
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from utils.data_loader import load_sample_jobs
-from pathlib import Path
 
 nlp = spacy.load("en_core_web_sm")
 

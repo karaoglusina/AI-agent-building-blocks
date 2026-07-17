@@ -8,10 +8,10 @@ Key concept: A model gateway provides a single point of control for all LLM call
 Book reference: AI_eng.10.3
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field

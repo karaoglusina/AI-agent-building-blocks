@@ -8,10 +8,10 @@ Key concept: Vision-enabled LLMs can extract structured information from documen
 Book reference: hands_on_LLM.II.9, AI_eng.6
 """
 
-import utils._load_env  # Loads .env file automatically
-
 import sys
 sys.path.insert(0, str(__file__).rsplit("/", 4)[0])
+
+import utils._load_env  # Loads .env file automatically
 
 
 def document_vision_intro():
