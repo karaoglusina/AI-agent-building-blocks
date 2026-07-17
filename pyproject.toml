@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sina-agent-testing"
+name = "ai-agent-building-blocks"
 version = "0.1.0"
 description = "AI Agent Building Blocks - A comprehensive Python reference for learning and building AI agents"
 readme = "README.md"
@@ -33,6 +33,9 @@ phase-2 = [
     "numpy>=1.24.0",
     # NLP & Text Processing
     "spacy>=3.7.0",
+    # The spaCy model is declared here so `uv sync` manages it. Without this, every
+    # `uv sync` UNINSTALLS a model added by `spacy download`, silently breaking Phase 2.
+    "en-core-web-sm",
     "nltk>=3.8.0",
     "keybert>=0.8.0",
     "tiktoken>=0.5.0",
@@ -40,6 +43,14 @@ phase-2 = [
     # ML & Embeddings
     "sentence-transformers>=2.2.0",
     "scikit-learn>=1.3.0",
+    "setfit>=1.0.0",
+    # Pinned <5: setfit 1.1.x imports `default_logdir` from transformers.training_args,
+    # which transformers 5.0 moved. Unpinning breaks 2.3-classification-routing.
+    "transformers>=4.35.0,<5.0.0",
+    # Structured output (2.8-prompt-engineering)
+    "instructor>=1.0.0",
+    # Generation metrics (2.9-evaluation-basics)
+    "rouge-score>=0.1.2",
     # Utilities
     "python-dotenv>=1.2.1",
     "pip>=24.0",
@@ -60,15 +71,21 @@ phase-3 = [
     "rapidfuzz>=3.0.0",
     "sentence-transformers>=2.2.0",
     "scikit-learn>=1.3.0",
+    # Keyword search for hybrid retrieval (3.4-advanced-rag)
+    "rank-bm25>=0.2.2",
     # Web Framework
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
     # Advanced ML
     "bertopic>=0.17.0",
-    "transformers>=4.35.0",
+    "transformers>=4.35.0,<5.0.0",
     "faiss-cpu>=1.7.0",
+    # Clustering & visualization (3.7-clustering-topics)
+    "umap-learn>=0.5.0",
+    "matplotlib>=3.8.0",
     # Document Processing
     "pypdf>=3.0.0",
+    "pymupdf>=1.23.0",
     # Utilities
     "python-dotenv>=1.2.1",
     "pip>=24.0",
@@ -93,9 +110,11 @@ phase-4 = [
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
     "bertopic>=0.17.0",
-    "transformers>=4.35.0",
+    "transformers>=4.35.0,<5.0.0",
     "faiss-cpu>=1.7.0",
     "pypdf>=3.0.0",
+    # Config management (4.1-docker)
+    "pydantic-settings>=2.0.0",
     # Database & ORM
     "sqlalchemy>=2.0.0",
     "pgvector>=0.2.0",
@@ -103,7 +122,9 @@ phase-4 = [
     # Background Jobs
     "celery>=5.3.0",
     # Observability
-    "langfuse>=2.0.0",
+    # Pinned to v2: module 4.3 is written against `langfuse.decorators`, which v3
+    # removed. Unpinning this breaks 4.3 at import time. See that module's README.
+    "langfuse>=2.0.0,<3.0.0",
     # HTTP Client
     "httpx>=0.28.1",
     # Utilities
@@ -119,7 +140,7 @@ phase-5 = [
     "chromadb>=0.4.0",
     "numpy>=1.24.0",
     # ML & Deep Learning
-    "transformers>=4.35.0",
+    "transformers>=4.35.0,<5.0.0",
     "peft>=0.7.0",
     "torch>=2.0.0",
     "sentence-transformers>=2.2.0",
@@ -133,17 +154,21 @@ phase-5 = [
     "pip>=24.0",
 ]
 
-# Development dependencies (optional, for notebooks, etc.)
+# Development dependencies (notebooks, scratch work). Anything a script imports
+# belongs in that script's phase group, not here — otherwise `uv sync --group phase-N`
+# produces a phase that cannot run.
 dev = [
     "ipykernel>=7.1.0",
     "langchain>=1.2.0",
     "rich>=14.2.0",
-    "instructor>=1.0.0",
-    "setfit>=1.0.0",
-    "umap-learn>=0.5.0",
-    "pymupdf>=1.23.0",
     "pip>=24.0",
 ]
+
+[tool.uv.sources]
+# en-core-web-sm is not on PyPI; it ships from the spacy-models GitHub releases.
+# Declaring it here lets `uv sync` install and keep it, instead of removing whatever
+# `python -m spacy download` put there.
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
 
 [tool.setuptools]
 packages = ["utils"]
