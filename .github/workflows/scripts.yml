@@ -1,0 +1,77 @@
+name: Scripts
+
+# Smoke-tests the scripts with TEST_MODE=1, so no API key is needed.
+# This is the repo dogfooding its own module 4.8 (CI/CD Basics).
+#
+# A pass means a script RUNS. It does not mean the output is correct — nothing here
+# makes a real API call. It catches rot, not wrongness.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly. This repo's scripts rarely change; the ecosystem underneath them does.
+    # Two modules were silently broken by dependency majors drifting (langfuse v3
+    # deleted langfuse.decorators, transformers v5 moved default_logdir) and nothing
+    # noticed for months. This job is what notices.
+    - cron: "0 6 * * 1"
+
+jobs:
+  phase-1:
+    name: Phase 1 smoke test (no API key)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Check uv.lock matches pyproject.toml
+        # A stale lock means people clone and install versions the pyproject no longer
+        # asks for — which is how langfuse v3 and transformers v5 got in and broke two
+        # modules. Cheap to check, expensive to miss.
+        run: uv lock --check
+
+      - name: Install phase-1 dependencies
+        run: uv sync --group phase-1
+
+      - name: Run Phase 1 scripts with TEST_MODE=1
+        run: uv run python tests/test_all_scripts.py --filter phase-1-foundations
+
+  all-phases:
+    name: All phases smoke test
+    # Not on every push: --all-groups pulls torch, transformers, faiss and bertopic —
+    # several GB and ~10 minutes. Phase 1 above is the fast signal on PRs; this is the
+    # thorough one, on a schedule and on demand.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install all dependency groups
+        run: uv sync --all-groups
+
+      - name: Download spaCy/NLTK data
+        run: uv run python utils/setup_models.py
+
+      - name: Run all scripts with TEST_MODE=1
+        run: uv run python tests/test_all_scripts.py
