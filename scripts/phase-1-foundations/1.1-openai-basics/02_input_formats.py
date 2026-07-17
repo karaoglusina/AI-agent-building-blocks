@@ -1,7 +1,7 @@
 """
 02 - Input Formats
 ==================
-Different ways to pass input to the Responses API.
+Different ways to pass input to the Chat Completions API.
 
 Key concept: Input can be a string OR a list of messages.
 """

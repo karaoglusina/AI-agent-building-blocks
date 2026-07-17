@@ -1,7 +1,7 @@
 """
 01 - Basic API Call
 ====================
-The simplest possible OpenAI API call using the Responses API.
+The simplest possible OpenAI API call using the Chat Completions API.
 
 Key concept: client.chat.completions.create() is the core method.
 """

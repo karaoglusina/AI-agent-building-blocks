@@ -38,13 +38,14 @@ class LanguageList(BaseModel):
 
 
 # Request structured output
-response = client.chat.completions.create(  # Note: .parse() not .create()
-model="gpt-4o-mini",
-messages=[{"role": "user", "content": "List 3 programming languages with their primary use and difficulty level."}],  # Pydantic model as schema
-response_format={"type": "json_object"})
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "List 3 programming languages with their primary use and difficulty level. Return JSON matching: {\"languages\": [{\"name\": ..., \"primary_use\": ..., \"difficulty\": ...}]}"}],
+    response_format={"type": "json_object"},
+)
 
-# ProgrammingLanguage.model_validate_json(response.choices[0].message.content) is already a Pydantic model!
-result: LanguageList = ProgrammingLanguage.model_validate_json(response.choices[0].message.content)
+# JSON mode guarantees valid JSON, not a valid schema — Pydantic is what enforces the shape.
+result: LanguageList = LanguageList.model_validate_json(response.choices[0].message.content)
 
 print(f"Type: {type(result)}")
 print(f"Number of languages: {len(result.languages)}")

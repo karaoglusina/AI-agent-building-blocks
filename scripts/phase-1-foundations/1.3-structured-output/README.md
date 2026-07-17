@@ -17,9 +17,9 @@ This is where OpenAI and Pydantic come together. Structured output ensures LLM r
 
 ## Key Takeaways
 
-1. **`responses.parse()`** instead of `responses.create()` for structured output
-2. **`text_format=YourModel`** tells OpenAI the expected schema
-3. **`response.output_parsed`** is already a Pydantic model
+1. **`response_format={"type": "json_object"}`** forces the model to emit valid JSON
+2. **JSON mode guarantees syntax, not schema** — the model can still return the wrong fields
+3. **`YourModel.model_validate_json(...)`** is what actually enforces the schema, and gives you a typed Pydantic object
 4. **Literal types** restrict values to specific options (great for classification)
 5. **Nested models** enable complex, hierarchical extraction
 6. **Field descriptions** help the model understand what to extract
@@ -32,15 +32,15 @@ class Result(BaseModel):
     name: str
     score: int
 
-# Ask for it
-response = client.responses.parse(
+# Ask for JSON
+response = client.chat.completions.create(
     model="gpt-4o-mini",
-    input="...",
-    text_format=Result  # OpenAI guarantees this schema
+    messages=[{"role": "user", "content": "... return JSON with name and score"}],
+    response_format={"type": "json_object"},  # guarantees valid JSON, not this schema
 )
 
-# Get exactly what you defined
-result: Result = response.output_parsed
+# Pydantic is what enforces the shape
+result: Result = Result.model_validate_json(response.choices[0].message.content)
 ```
 
 ## Why This Matters for Agents

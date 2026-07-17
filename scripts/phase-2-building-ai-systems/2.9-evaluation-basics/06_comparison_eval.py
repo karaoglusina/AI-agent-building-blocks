@@ -99,7 +99,7 @@ def judge_comparison(query: str, output_a: str, output_b: str) -> JudgeDecision:
     )
     
     # Map back to A/B
-    decision = result.output_parsed
+    decision = JudgeDecision.model_validate_json(result.choices[0].message.content)
     if "first" in decision.winner.lower():
         decision.winner = first_label
     elif "second" in decision.winner.lower():
